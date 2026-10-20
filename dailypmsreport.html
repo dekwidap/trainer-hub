@@ -10,6 +10,8 @@
 
     <link rel="stylesheet" href="css/style.css">
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </head>
 
 
@@ -150,24 +152,24 @@
                             Task Category <span>*</span>
                         </label>
                         <select id="taskCategory" name="taskCategory" required>
-                            <option value="">Pilih kategori</option>
-                            <option value="Planning">Planning</option>
-                            <option value="Un-Planning">Un-Planning</option>
+                            <option value="" disabled selected hidden>Pilih kategori</option>
+                            <option value="PLANNING">Planning</option>
+                            <option value="UN-PLANNING">Un-Planning</option>
                         </select>
                     </div>
 
                     <div class="form-field">
                         <label for="statusTask">Status Task <span>*</span></label>
                         <select id="statusTask" name="statusTask" required>
-                            <option value="">Pilih status</option>
-                            <option value="On Progress">On Progress</option>
+                            <option value="" disabled selected hidden>Pilih status</option>
+                            <option value="On progress">On Progress</option>
                             <option value="Pending">Pending</option>
-                            <option value="Eksklasi">Eksklasi</option>
+                            <option value="Eskalasi">Eskalasi</option>
                             <option value="Done">Done</option>
-                            <option value="Waiting to Response">
-                                Waiting to Response
+                            <option value="Waiting Response">
+                                Waiting Response
                             </option>
-                            <option value="No Response">No Response</option>
+                            <option value="No Progress">No Progress</option>
                         </select>
                     </div>
 
@@ -176,7 +178,7 @@
                             Komponen Pekerjaan <span>*</span>
                         </label>
                         <select id="komponen" name="komponen" required>
-                            <option value="">Pilih komponen pekerjaan</option>
+                            <option value="" disabled selected hidden>Pilih komponen pekerjaan</option>
                             <option value="SETUP PRINTER">SETUP PRINTER</option>
                             <option value="SETUP SISTEM">SETUP SISTEM</option>
                             <option value="MIGRASI DATA">MIGRASI DATA</option>
@@ -217,54 +219,13 @@
                 </div>
             </section>
 
-            <!-- PENYELESAIAN DAN ESKALASI -->
-            <section class="report-card">
-                <div class="report-card-heading">
-                    <div class="report-section-icon">
-                        <i data-lucide="calendar-check" aria-hidden="true"></i>
-                    </div>
-                    <div>
-                        <h3>Penyelesaian dan Eskalasi</h3>
-                        <p>Lengkapi informasi penyelesaian dan tindak lanjut.</p>
-                    </div>
-                </div>
-
-                <div class="report-grid">
-
-                    <div class="form-field">
-                        <label for="tanggalSelesai">Tanggal Selesai</label>
-                        <input type="date" id="tanggalSelesai" name="tanggalSelesai">
-                    </div>
-
-                    <div class="form-field">
-                        <label for="eskalasi">Eskalasi</label>
-                        <select id="eskalasi" name="eskalasi">
-                            <option value="">Pilih eskalasi (opsional)</option>
-                            <option value="DSI">DSI</option>
-                            <option value="CS">CS</option>
-                            <option value="BOD">BOD</option>
-                            <option value="Trainer">Trainer</option>
-                        </select>
-                    </div>
-
-                    <div class="form-field form-field-full">
-                        <label for="keterangan">Keterangan</label>
-                        <textarea id="keterangan" name="keterangan" rows="4"
-                            placeholder="Tambahkan keterangan jika diperlukan..."></textarea>
-                    </div>
-
-                </div>
-            </section>
-
             <!-- FORM ACTIONS -->
             <div class="report-form-actions">
-                <p class="report-required-note">
-                    <span>*</span> Wajib diisi
-                </p>
+
 
                 <button class="report-submit" type="submit">
                     <i data-lucide="send" aria-hidden="true"></i>
-                    <span>Uji Tampilan Form</span>
+                    <span>Kirim Laporan Daily</span>
                 </button>
             </div>
 
@@ -333,7 +294,7 @@
 
         // Dropdown Trainer
         trainerSelect.innerHTML =
-            '<option value="">Pilih trainer</option>';
+            '<option value="" hidden>Pilih trainer</option>';
 
         result.trainers.forEach(function (trainer) {
             const option = document.createElement("option");
@@ -345,7 +306,7 @@
 
         // Dropdown Property
         propertySelect.innerHTML =
-            '<option value="">Pilih property</option>';
+            '<option value="" hidden>Pilih property</option>';
 
         result.properties.forEach(function (property) {
             const option = document.createElement("option");
@@ -409,9 +370,6 @@
             status: formData.get("statusTask"),
             komponen: formData.get("komponen"),
             detail: formData.get("detailPekerjaan"),
-            tanggalSelesai: formData.get("tanggalSelesai"),
-            eskalasi: formData.get("eskalasi"),
-            keterangan: formData.get("keterangan"),
             requestToken: String(Date.now()) + "-" +
                 Math.random().toString(36).slice(2)
         };
@@ -419,12 +377,18 @@
         activeRequestToken = payload.requestToken;
 
         submitButton.disabled = true;
-        reportNotice.hidden = false;
-        reportNotice.textContent = "Mengirim data ke spreadsheet...";
-        reportNotice.scrollIntoView({
-            behavior: "smooth",
-            block: "nearest"
+
+        Swal.fire({
+            title: "Mengirim Data...",
+            text: "Mohon tunggu, data sedang dikirim ke spreadsheet.",
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            showConfirmButton: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
         });
+
 
         let iframe = document.getElementById("reportSubmitFrame");
 
@@ -452,13 +416,19 @@
         submitForm.submit();
         submitForm.remove();
 
+
         submitTimeout = setTimeout(function () {
             if (!activeRequestToken) return;
 
             activeRequestToken = "";
             submitButton.disabled = false;
-            reportNotice.textContent =
-                "Belum menerima konfirmasi. Periksa spreadsheet sebelum mencoba mengirim ulang agar data tidak tercatat dua kali.";
+
+            Swal.fire({
+                icon: "warning",
+                title: "Belum Ada Konfirmasi",
+                text: "Periksa spreadsheet sebelum mencoba mengirim ulang agar data tidak tercatat dua kali.",
+                confirmButtonText: "Mengerti"
+            });
         }, 30000);
     });
 
@@ -478,21 +448,25 @@
         activeRequestToken = "";
         submitButton.disabled = false;
 
-        reportNotice.hidden = false;
-        reportNotice.textContent = result.message ||
-            (result.success
-                ? "Data berhasil disimpan."
-                : "Data gagal disimpan.");
-
         if (result.success) {
             reportForm.reset();
-        }
 
-        reportNotice.scrollIntoView({
-            behavior: "smooth",
-            block: "nearest"
-        });
+            Swal.fire({
+                icon: "success",
+                title: "Berhasil!",
+                text: result.message || "Data berhasil disimpan ke spreadsheet.",
+                confirmButtonText: "Selesai"
+            });
+        } else {
+            Swal.fire({
+                icon: "error",
+                title: "Gagal Menyimpan Data",
+                text: result.message || "Terjadi kesalahan saat menyimpan data.",
+                confirmButtonText: "Tutup"
+            });
+        }
     });
+
 
 
 
