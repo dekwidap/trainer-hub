@@ -377,24 +377,125 @@
         console.warn("URL Web App belum diatur.");
     }
 
-    // Tombol masih untuk menguji tampilan, bukan mengirim data
-    document.getElementById("dailyReportForm")
-        .addEventListener("submit", function (event) {
-            event.preventDefault();
 
-            const notice =
-                document.getElementById("reportTestNotice");
+    // Untuk mengirimkan data ke Spreadsheet
+    const reportForm = document.getElementById("dailyReportForm");
+    const reportNotice = document.getElementById("reportTestNotice");
+    const submitButton = reportForm.querySelector(
+        'button[type="submit"]'
+    );
 
-            notice.textContent =
-                "Validasi form berhasil. Data belum dikirim ke spreadsheet.";
+    let activeRequestToken = "";
+    let submitTimeout = null;
 
-            notice.hidden = false;
+    reportForm.addEventListener("submit", function (event) {
+        event.preventDefault();
 
-            notice.scrollIntoView({
-                behavior: "smooth",
-                block: "nearest"
-            });
+        if (activeRequestToken) {
+            return;
+        }
+
+        if (!reportForm.reportValidity()) {
+            return;
+        }
+
+        const formData = new FormData(reportForm);
+
+        const payload = {
+            tanggal: formData.get("tanggal"),
+            trainer: formData.get("trainer"),
+            property: formData.get("property"),
+            taskCategory: formData.get("taskCategory"),
+            status: formData.get("statusTask"),
+            komponen: formData.get("komponen"),
+            detail: formData.get("detailPekerjaan"),
+            tanggalSelesai: formData.get("tanggalSelesai"),
+            eskalasi: formData.get("eskalasi"),
+            keterangan: formData.get("keterangan"),
+            requestToken: String(Date.now()) + "-" +
+                Math.random().toString(36).slice(2)
+        };
+
+        activeRequestToken = payload.requestToken;
+
+        submitButton.disabled = true;
+        reportNotice.hidden = false;
+        reportNotice.textContent = "Mengirim data ke spreadsheet...";
+        reportNotice.scrollIntoView({
+            behavior: "smooth",
+            block: "nearest"
         });
+
+        let iframe = document.getElementById("reportSubmitFrame");
+
+        if (!iframe) {
+            iframe = document.createElement("iframe");
+            iframe.id = "reportSubmitFrame";
+            iframe.name = "reportSubmitFrame";
+            iframe.hidden = true;
+            document.body.appendChild(iframe);
+        }
+
+        const submitForm = document.createElement("form");
+        submitForm.method = "POST";
+        submitForm.action = MASTER_DATA_URL;
+        submitForm.target = "reportSubmitFrame";
+        submitForm.hidden = true;
+
+        const payloadInput = document.createElement("input");
+        payloadInput.type = "hidden";
+        payloadInput.name = "payload";
+        payloadInput.value = JSON.stringify(payload);
+
+        submitForm.appendChild(payloadInput);
+        document.body.appendChild(submitForm);
+        submitForm.submit();
+        submitForm.remove();
+
+        submitTimeout = setTimeout(function () {
+            if (!activeRequestToken) return;
+
+            activeRequestToken = "";
+            submitButton.disabled = false;
+            reportNotice.textContent =
+                "Belum menerima konfirmasi. Periksa spreadsheet sebelum mencoba mengirim ulang agar data tidak tercatat dua kali.";
+        }, 30000);
+    });
+
+    window.addEventListener("message", function (event) {
+        const result = event.data;
+
+        if (
+            !result ||
+            typeof result !== "object" ||
+            !activeRequestToken ||
+            result.requestToken !== activeRequestToken
+        ) {
+            return;
+        }
+
+        clearTimeout(submitTimeout);
+        activeRequestToken = "";
+        submitButton.disabled = false;
+
+        reportNotice.hidden = false;
+        reportNotice.textContent = result.message ||
+            (result.success
+                ? "Data berhasil disimpan."
+                : "Data gagal disimpan.");
+
+        if (result.success) {
+            reportForm.reset();
+        }
+
+        reportNotice.scrollIntoView({
+            behavior: "smooth",
+            block: "nearest"
+        });
+    });
+
+
+
 </script>
 
 
