@@ -1,4 +1,27 @@
 
+/* =========================
+   ACTIVE NAVIGATION
+   Menandai menu sesuai halaman yang dibuka
+========================= */
+
+const currentPage = window.location.pathname.split("/").pop() || "index.html";
+
+document.querySelectorAll(".header-nav .nav-link").forEach(function (link) {
+    const linkPage = link.getAttribute("href").split("/").pop();
+
+    if (linkPage === currentPage) {
+        link.classList.add("active");
+        link.setAttribute("aria-current", "page");
+    } else {
+        link.classList.remove("active");
+        link.removeAttribute("aria-current");
+    }
+});
+
+
+
+
+
 const themeToggle = document.getElementById("themeToggle");
 const themeIcon = document.getElementById("themeIcon");
 
