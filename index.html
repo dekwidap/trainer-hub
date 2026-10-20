@@ -17,9 +17,10 @@
 
     <!-- HEADER -->
     <header class="header">
+
+        <!-- Logo dan Judul -->
         <div class="header-brand">
 
-            <!-- Logo -->
             <div class="logo">
                 <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8"
                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -29,7 +30,6 @@
                 </svg>
             </div>
 
-            <!-- Judul -->
             <div class="header-title">
                 <h1>Trainer Hub</h1>
                 <p>Work Links Dashboard</p>
@@ -37,326 +37,72 @@
 
         </div>
 
-        <!-- Tombol Dark / Light Mode -->
-        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Aktifkan dark mode" title="Ganti tema">
-            <svg id="themeIcon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor"
-                stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <circle cx="12" cy="12" r="4" />
-                <path d="M12 2v2" />
-                <path d="M12 20v2" />
-                <path d="m4.93 4.93 1.42 1.42" />
-                <path d="m17.65 17.65 1.42 1.42" />
-                <path d="M2 12h2" />
-                <path d="M20 12h2" />
-                <path d="m4.93 19.07 1.42-1.42" />
-                <path d="m17.65 6.35 1.42-1.42" />
-            </svg>
-        </button>
+        <!-- Navigasi -->
+        <nav class="header-nav" id="headerNav" aria-label="Navigasi utama">
+
+            <a href="index.html" class="nav-link active" aria-current="page">
+                <i data-lucide="house" aria-hidden="true"></i>
+                <span>Home</span>
+            </a>
+
+            <a href="linkshortcut.html" class="nav-link">
+                <i data-lucide="link" aria-hidden="true"></i>
+                <span>Link Shortcut</span>
+            </a>
+
+            <a href="dailypmsreport.html" class="nav-link">
+                <i data-lucide="chart-no-axes-column" aria-hidden="true"></i>
+                <span>Daily PMS Report</span>
+            </a>
+
+        </nav>
+
+        <!-- Aksi Header -->
+        <div class="header-actions">
+
+            <!-- Tombol Dark / Light Mode -->
+            <button class="theme-toggle" id="themeToggle" type="button" aria-label="Aktifkan dark mode"
+                title="Ganti tema">
+
+                <svg id="themeIcon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor"
+                    stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="12" cy="12" r="4" />
+                    <path d="M12 2v2" />
+                    <path d="M12 20v2" />
+                    <path d="m4.93 4.93 1.42 1.42" />
+                    <path d="m17.65 17.65 1.42 1.42" />
+                    <path d="M2 12h2" />
+                    <path d="M20 12h2" />
+                    <path d="m4.93 19.07 1.42-1.42" />
+                    <path d="m17.65 6.35 1.42-1.42" />
+                </svg>
+
+            </button>
+
+            <!-- Tombol Hamburger untuk Mobile -->
+            <button class="menu-toggle" id="menuToggle" type="button" aria-label="Buka navigasi"
+                aria-controls="headerNav" aria-expanded="false" title="Buka menu">
+
+                <i data-lucide="menu" aria-hidden="true"></i>
+
+            </button>
+
+        </div>
+
     </header>
 
-    <!-- BODY: Akan kita buat pada tahap berikutnya -->
+
+    <!-- BODY  -->
     <main class="main-content">
-
-
-        <main class="main-content">
-
-            <div class="link-sections">
-
-                <!-- Kategori 1 -->
-
-                <section class="link-section">
-
-                    <div class="section-heading">
-                        <h2>Guide All Produk PMS Pro</h2>
-                    </div>
-
-                    <div class="card-container">
-
-                        <a href="https://drive.google.com/drive/folders/1EBDKdxPfgiweokTNqX0GQTvJLUgPjDby?usp=sharing"
-                            class="link-card" target="_blank" rel="noopener noreferrer">
-                            <div class="card-icon">
-                                <i data-lucide="bed-double"></i>
-                            </div>
-
-                            <div class="card-content">
-                                <h3>PMS FOS</h3>
-                                <p>Dokumentasi FOS</p>
-                            </div>
-
-                            <i data-lucide="arrow-up-right"></i>
-                        </a>
-
-                        <a href="https://drive.google.com/drive/folders/1GqkL9YygwmsKpjY0BP0MygrUBg05cv3D?usp=sharing"
-                            class="link-card" target="_blank" rel="noopener noreferrer">
-                            <div class="card-icon">
-                                <i data-lucide="hotel"></i>
-                            </div>
-
-                            <div class="card-content">
-                                <h3>PMS BOS</h3>
-                                <p>Dokumentasi BOS</p>
-                            </div>
-
-                            <i data-lucide="arrow-up-right"></i>
-                        </a>
-
-
-                        <a href="https://drive.google.com/drive/folders/1P05gDMcUncLn5Ho8RglHhdOUbJMFzEoD?usp=sharing"
-                            class="link-card" target="_blank" rel="noopener noreferrer">
-                            <div class="card-icon">
-                                <i data-lucide="utensils"></i>
-                            </div>
-
-                            <div class="card-content">
-                                <h3>PMS POS</h3>
-                                <p>Dokumentasi POS</p>
-                            </div>
-
-                            <i data-lucide="arrow-up-right"></i>
-                        </a>
-                        <a href="https://drive.google.com/drive/folders/1m07LToNqnvQjaVkHmmisGPMb7K4PjOuX?usp=sharing"
-                            class="link-card" target="_blank" rel="noopener noreferrer">
-                            <div class="card-icon">
-                                <i data-lucide="book-open-text"></i>
-                            </div>
-
-                            <div class="card-content">
-                                <h3>R1</h3>
-                                <p>Dokumentasi R1</p>
-                            </div>
-
-                            <i data-lucide="arrow-up-right"></i>
-                        </a>
-
-
-                        <a href="https://drive.google.com/drive/folders/1AODywbjqwMzp92dgRmLvV01tJUW3-7sA?usp=sharing"
-                            class="link-card" target="_blank" rel="noopener noreferrer">
-                            <div class="card-icon">
-                                <i data-lucide="trending-up-down"></i>
-                            </div>
-
-                            <div class="card-content">
-                                <h3>Dynamic Price</h3>
-                                <p>Dokumentasi Dynamic Price</p>
-                            </div>
-
-                            <i data-lucide="arrow-up-right"></i>
-                        </a>
-
-                    </div>
-
-                </section>
-
-                <!-- Kategori 2 -->
-
-                <section class="link-section">
-
-                    <div class="section-heading">
-                        <h2>Tools & Resources</h2>
-                    </div>
-
-                    <div class="card-container">
-
-                        <a href="https://drive.google.com/drive/folders/1u1I0_fVlDF9e6aU8GJ5evvFnRnidrDLE?usp=drive_link"
-                            class="link-card" target="_blank" rel="noopener noreferrer">
-                            <div class="card-icon">
-                                <i data-lucide="wrench"></i>
-                            </div>
-
-                            <div class="card-content">
-                                <h3>Installer PMS PRO</h3>
-                                <p>Deskripsi singkat panduan.</p>
-                            </div>
-
-                            <i data-lucide="arrow-up-right"></i>
-                        </a>
-
-                        <a href="https://drive.google.com/drive/folders/1LNesbHG-FJLHnQH6OW_mjqR7H2WyIky4?usp=sharing"
-                            class="link-card" target="_blank" rel="noopener noreferrer">
-                            <div class="card-icon">
-                                <i data-lucide="printer"></i>
-                            </div>
-
-                            <div class="card-content">
-                                <h3>Printer Setup dan Installer</h3>
-                                <p>Panduan Printer POS dan Installer Printer</p>
-                            </div>
-
-                            <i data-lucide="arrow-up-right"></i>
-                        </a>
-
-                        <a href="https://drive.google.com/drive/folders/1Yb_5OF56p2ZDH8bPqlyHA5J_yP000SbZ?usp=sharing"
-                            class="link-card" target="_blank" rel="noopener noreferrer">
-                            <div class="card-icon">
-                                <i data-lucide="database"></i>
-                            </div>
-
-                            <div class="card-content">
-                                <h3>Inject Data</h3>
-                                <p>Panduan Insert Inject</p>
-                            </div>
-
-                            <i data-lucide="arrow-up-right"></i>
-                        </a>
-
-                        <a href="https://drive.google.com/drive/folders/1tFmrH1AapWgXPK1ZWqCS-g26yRlNaer5?usp=sharing"
-                            class="link-card" target="_blank" rel="noopener noreferrer">
-                            <div class="card-icon">
-                                <i data-lucide="calendar-clock"></i>
-                            </div>
-
-                            <div class="card-content">
-                                <h3>Schedule Training Property</h3>
-                                <p>Template Jadwal selama di Property</p>
-                            </div>
-
-                            <i data-lucide="arrow-up-right"></i>
-                        </a>
-
-                        <a href="https://drive.google.com/drive/folders/1B-K4KF97P8CWJFW7vGVlEzrq6OXbwO8r?usp=sharing"
-                            class="link-card" target="_blank" rel="noopener noreferrer">
-                            <div class="card-icon">
-                                <i data-lucide="file-text"></i>
-                            </div>
-
-                            <div class="card-content">
-                                <h3>Training dan Implementasi Files</h3>
-                                <p>File Inject Migrasi, Project R`eport, Checklist, Comment Card, dan Absensi</p>
-                            </div>
-
-                            <i data-lucide="arrow-up-right"></i>
-                        </a>
-
-
-
-                    </div>
-
-                </section>
-
-
-                <!-- Kategori 3 -->
-
-                <section class="link-section">
-
-                    <div class="section-heading">
-                        <h2>Report Internal</h2>
-                    </div>
-                    <div class="card-container">
-
-                        <a href="https://docs.google.com/spreadsheets/d/1jplQjNob1Ri8FWePOTN2oZsEHZ-h5VzH3ftzvuRIyvM/edit?gid=1504386352#gid=1504386352"
-                            class="link-card" target="_blank" rel="noopener noreferrer">
-                            <div class="card-icon">
-                                <i data-lucide="clipboard-list"></i>
-                            </div>
-
-                            <div class="card-content">
-                                <h3>Daily Report</h3>
-                                <p>Pelaporan Daily Work Software Trainer</p>
-                            </div>
-
-                            <i data-lucide="arrow-up-right"></i>
-                        </a>
-
-                        <a href="https://docs.google.com/spreadsheets/d/1-evBdRDOv3djBnWfY_-eSZlH1X1W8vJITPzZIpdcW8k/edit?usp=sharing" class="link-card" target="_blank"
-                            rel="noopener noreferrer">
-                            <div class="card-icon">
-                                <i data-lucide="calendar-days"></i>
-                            </div>
-
-                            <div class="card-content">
-                                <h3>Jadwal Software Trainer dan Biaya Refresh Training</h3>
-                                <p>Cek Jadwal Trainer dan Biaya Refresh Training</p>
-                            </div>
-
-                            <i data-lucide="arrow-up-right"></i>
-                        </a>
-
-                        <a href="https://forms.gle/xBwDM1JRo1ThuXraA" class="link-card" target="_blank"
-                            rel="noopener noreferrer">
-                            <div class="card-icon">
-                                <i data-lucide="clipboard-list"></i>
-                            </div>
-
-                            <div class="card-content">
-                                <h3>Submit Report Visit / Training</h3>
-                                <p>Pelaporan setelah Visit dan Training di Property</p>
-                            </div>
-
-                            <i data-lucide="arrow-up-right"></i>
-                        </a>
-
-                        <a href="https://docs.google.com/forms/d/e/1FAIpQLSdOrukoJSEcglgV4LpwOZt1edb0BX0EgGLKKJ-tXa6rctYz2Q/viewform"
-                            class="link-card" target="_blank" rel="noopener noreferrer">
-                            <div class="card-icon">
-
-                                <i data-lucide="send-horizontal"></i>
-                            </div>
-
-                            <div class="card-content">
-                                <h3>Submit Project Report</h3>
-                                <p>Pelaporan setelah selesai Serah Terima di Project Property</p>
-                            </div>
-
-                            <i data-lucide="arrow-up-right"></i>
-                        </a>
-
-
-                        <a href="https://forms.gle/8GgcpdfmJXvb68Cp7" class="link-card" target="_blank"
-                            rel="noopener noreferrer">
-                            <div class="card-icon">
-                                <i data-lucide="send"></i>
-
-                            </div>
-
-                            <div class="card-content">
-                                <h3>Submit Maintenance</h3>
-                                <p>Pelaporan Maintenance ke Property yang di Cek</p>
-                            </div>
-
-                            <i data-lucide="arrow-up-right"></i>
-                        </a>
-                        <a href="https://drive.google.com/drive/u/0/folders/1jxDW_7-oNw2IqMRRAjfZ58jZvtPRE1__"
-                            class="link-card" target="_blank" rel="noopener noreferrer">
-                            <div class="card-icon">
-                                <i data-lucide="list-checks"></i>
-                            </div>
-
-                            <div class="card-content">
-                                <h3>Checklist Property (Drive)</h3>
-                                <p>Link all in One Checklist Property</p>
-                            </div>
-
-                            <i data-lucide="arrow-up-right"></i>
-                        </a>
-                        
-                        <a href="https://docs.google.com/spreadsheets/d/1lHeQVgNzpTmBJFW-9_PNR9crk1D9vCYrFA0fruLfTAQ/edit?usp=sharing"
-                            class="link-card" target="_blank" rel="noopener noreferrer">
-                            <div class="card-icon">
-                                <i data-lucide="venetian-mask"></i>
-                            </div>
-
-                            <div class="card-content">
-                                <h3>Anomali Property</h3>
-                                <p>List Anomali di Cek Awal Bulan</p>
-                            </div>
-
-                            <i data-lucide="arrow-up-right"></i>
-                        </a>
-
-                    </div>
-
-                </section>
-
-
-            </div>
-
-        </main>
-
 
 
     </main>
 
-    <!-- FOOTER: Akan kita buat pada tahap berikutnya -->
+
+
+
+
+    <!-- FOOTER  -->
     <footer class="site-footer">
         <p class="footer-title">Trainer Hub</p>
         <p class="footer-description">

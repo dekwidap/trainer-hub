@@ -40,3 +40,71 @@ themeToggle.addEventListener("click", function () {
         );
     }
 });
+
+
+
+/* =========================
+   MOBILE NAVIGATION
+========================= */
+
+const menuToggle = document.getElementById("menuToggle");
+const headerNav = document.getElementById("headerNav");
+
+if (menuToggle && headerNav) {
+    const menuIcon = `
+        <i data-lucide="menu" aria-hidden="true"></i>
+    `;
+
+    const closeIcon = `
+        <i data-lucide="x" aria-hidden="true"></i>
+    `;
+
+    function setMenuState(isOpen) {
+        headerNav.classList.toggle("is-open", isOpen);
+
+        menuToggle.setAttribute("aria-expanded", String(isOpen));
+        menuToggle.setAttribute(
+            "aria-label",
+            isOpen ? "Tutup navigasi" : "Buka navigasi"
+        );
+        menuToggle.setAttribute(
+            "title",
+            isOpen ? "Tutup menu" : "Buka menu"
+        );
+
+        menuToggle.innerHTML = isOpen ? closeIcon : menuIcon;
+
+        // Render ulang ikon Lucide setelah HTML ikon berubah
+        if (window.lucide) {
+            window.lucide.createIcons();
+        }
+    }
+
+    // Buka atau tutup menu
+    menuToggle.addEventListener("click", function () {
+        const isOpen = headerNav.classList.contains("is-open");
+        setMenuState(!isOpen);
+    });
+
+    // Tutup menu setelah tautan dipilih
+    headerNav.querySelectorAll(".nav-link").forEach(function (link) {
+        link.addEventListener("click", function () {
+            setMenuState(false);
+        });
+    });
+
+    // Tutup menu menggunakan tombol Escape
+    document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape") {
+            setMenuState(false);
+        }
+    });
+
+    // Pastikan menu tertutup saat berpindah ke desktop
+    window.addEventListener("resize", function () {
+        if (window.innerWidth > 700) {
+            setMenuState(false);
+        }
+    });
+}
+

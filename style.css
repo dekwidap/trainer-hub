@@ -1,6 +1,8 @@
-/* =========================
+/* ==================================================
    1. VARIABEL WARNA
-========================= */
+   Mengatur warna utama website untuk light mode.
+   Warna lain menggunakan variabel ini agar mudah diubah.
+================================================== */
 
 :root {
     color-scheme: light;
@@ -10,15 +12,23 @@
     --text-color: #202938;
     --muted-color: #697386;
     --border-color: #e0e5ec;
+
     --logo-bg: #e8edf5;
     --logo-color: #34445f;
+
     --button-bg: #f3f5f8;
     --button-hover: #e6eaf0;
+
     --card-hover-bg: #baccf5;
     --card-hover-border: #223b71;
 }
 
-/* Tema gelap */
+
+/* ==================================================
+   2. TEMA GELAP
+   Mengganti variabel warna ketika body memiliki
+   class "dark-mode". Class ini dikontrol JavaScript.
+================================================== */
 
 body.dark-mode {
     color-scheme: dark;
@@ -28,17 +38,23 @@ body.dark-mode {
     --text-color: #ffffff;
     --muted-color: #b5c0d1;
     --border-color: #303949;
+
     --logo-bg: #34445f;
     --logo-color: #ffffff;
+
     --button-bg: #2c3545;
     --button-hover: #3a465a;
+
     --card-hover-bg: #303b4f;
     --card-hover-border: #607ba8;
 }
 
-/* =========================
-   2. PENGATURAN DASAR
-========================= */
+
+/* ==================================================
+   3. PENGATURAN DASAR
+   Mengatur ukuran elemen, margin dasar, font,
+   warna halaman, dan transisi perubahan tema.
+================================================== */
 
 * {
     box-sizing: border-box;
@@ -49,21 +65,23 @@ body {
     font-family: Arial, Helvetica, sans-serif;
     background-color: var(--bg-color);
     color: var(--text-color);
+
     transition:
         background-color 0.25s ease,
         color 0.25s ease;
 }
 
-/* =========================
-   3. HEADER
-========================= */
+
+/* ==================================================
+   4. HEADER UTAMA
+   Menyusun logo, judul, navigasi, dan tombol aksi
+   dalam satu baris pada tampilan desktop.
+================================================== */
 
 .header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 20px;
-
+    gap: 28px;
     padding: 18px 32px;
 
     background-color: var(--header-bg);
@@ -74,12 +92,14 @@ body {
         border-color 0.25s ease;
 }
 
-/* Logo dan judul */
+
+/* Logo dan judul Trainer Hub */
 
 .header-brand {
     display: flex;
     align-items: center;
     gap: 12px;
+    flex-shrink: 0;
 }
 
 .logo {
@@ -89,7 +109,6 @@ body {
 
     width: 44px;
     height: 44px;
-
     flex-shrink: 0;
 
     border-radius: 10px;
@@ -110,18 +129,94 @@ body {
     color: var(--muted-color);
 }
 
-/* =========================
-   4. TOMBOL TEMA
-========================= */
 
-.theme-toggle {
+/* ==================================================
+   5. NAVIGASI HEADER
+   Mengatur posisi dan tampilan tautan menu.
+   Class "active" menandai halaman yang sedang dibuka.
+================================================== */
+
+.header-nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    min-width: 0;
+}
+
+.nav-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+
+    border-radius: 8px;
+    color: var(--muted-color);
+    text-decoration: none;
+    white-space: nowrap;
+
+    font-size: 14px;
+    font-weight: 500;
+
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease;
+}
+
+/* Ukuran ikon pada menu navigasi */
+
+.nav-link svg {
+    width: 17px;
+    height: 17px;
+    flex-shrink: 0;
+}
+
+/* Efek ketika kursor diarahkan ke tautan */
+
+.nav-link:hover {
+    background-color: var(--button-hover);
+    color: var(--text-color);
+}
+
+/* Tampilan tautan halaman yang aktif */
+
+.nav-link.active {
+    background-color: var(--button-hover);
+    color: var(--text-color);
+    font-weight: 600;
+}
+
+/* Indikator fokus untuk pengguna keyboard */
+
+.nav-link:focus-visible {
+    outline: 2px solid var(--logo-color);
+    outline-offset: 3px;
+}
+
+
+/* ==================================================
+   6. TOMBOL AKSI HEADER
+   Mengatur posisi tombol tema dan tombol hamburger.
+================================================== */
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: auto;
+    flex-shrink: 0;
+}
+
+/* Tampilan dasar tombol tema dan hamburger */
+
+.theme-toggle,
+.menu-toggle {
     display: flex;
     align-items: center;
     justify-content: center;
 
     width: 42px;
     height: 42px;
-
     flex-shrink: 0;
 
     border: 1px solid var(--border-color);
@@ -137,77 +232,108 @@ body {
         transform 0.2s ease;
 }
 
-.theme-toggle:hover {
+/* Warna tombol ketika kursor diarahkan */
+
+.theme-toggle:hover,
+.menu-toggle:hover {
     background-color: var(--button-hover);
 }
 
-.theme-toggle:active {
+/* Efek ketika tombol ditekan */
+
+.theme-toggle:active,
+.menu-toggle:active {
     transform: scale(0.95);
 }
 
-.theme-toggle:focus-visible {
+/* Indikator fokus keyboard */
+
+.theme-toggle:focus-visible,
+.menu-toggle:focus-visible {
     outline: 2px solid var(--logo-color);
     outline-offset: 3px;
 }
 
-/* =========================
-   5. AREA BODY DAN FOOTER
-========================= */
+/* Hamburger hanya ditampilkan pada layar mobile */
+
+.menu-toggle {
+    display: none;
+}
+
+.menu-toggle svg {
+    width: 22px;
+    height: 22px;
+}
+
+
+/* ==================================================
+   7. AREA KONTEN DAN FOOTER
+   Mengatur tinggi minimum area utama dan jarak footer.
+================================================== */
 
 .main-content {
     min-height: 70vh;
 }
 
+/* Class footer umum jika digunakan pada halaman */
+
 .footer {
     padding: 20px 32px;
 }
 
-/* =========================
-   6. RESPONSIVE
-========================= */
+/* Footer utama di bagian bawah halaman */
 
-@media (max-width: 600px) {
-    .header {
-        padding: 14px 16px;
-    }
+.site-footer {
+    margin-top: 40px;
+    padding: 28px 20px;
+    text-align: center;
 
-    .header-title h1 {
-        font-size: 18px;
-    }
+    border-top: 1px solid var(--border-color);
+    background-color: var(--header-bg);
+}
 
-    .header-title p {
-        font-size: 11px;
-    }
+.footer-title {
+    margin: 0 0 8px;
+    color: var(--text-color);
+    font-size: 16px;
+    font-weight: 700;
+}
 
-    .logo {
-        width: 40px;
-        height: 40px;
-    }
+.footer-description {
+    margin: 0 0 14px;
+    color: var(--muted-color);
+    font-size: 13px;
+}
 
-    .theme-toggle {
-        width: 40px;
-        height: 40px;
-    }
+.footer-copyright {
+    margin: 0;
+    color: var(--muted-color);
+    font-size: 12px;
 }
 
 
+/* ==================================================
+   8. PEMBUNGKUS LINK DAN KATEGORI
+   .link-sections membungkus seluruh kategori.
+   .link-section mengatur jarak antar kategori.
+================================================== */
 
-/* =========================
-   7. BODY - LINK CARDS
-========================= */
-
-
-.link-section {
-    max-width: 100%;
-    margin: 0;
+.link-sections {
+    width: 100%;
     padding: 28px 20px;
 }
 
+.link-section {
+    width: 100%;
+    max-width: none;
+    margin: 0 0 36px;
+    padding: 0;
+}
 
-/* Judul bagian */
+/* Jarak antara judul kategori dan kartu */
 
 .section-heading {
-    margin-bottom: 24px;
+    margin-bottom: 18px;
 }
 
 .section-heading h2 {
@@ -219,12 +345,16 @@ body {
 
 .section-heading p {
     margin: 0;
+    color: var(--muted-color);
     font-size: 14px;
     line-height: 1.6;
-    color: var(--muted-color);
 }
 
-/* Susunan card */
+
+/* ==================================================
+   9. SUSUNAN LINK CARDS
+   Menampilkan kartu dalam dua kolom pada desktop.
+================================================== */
 
 .card-container {
     display: grid;
@@ -232,7 +362,11 @@ body {
     gap: 18px;
 }
 
-/* Card link */
+
+/* ==================================================
+   10. TAMPILAN LINK CARD
+   Mengatur bentuk, jarak, warna, dan isi setiap kartu.
+================================================== */
 
 .link-card {
     display: flex;
@@ -256,17 +390,16 @@ body {
         background-color 0.2s ease;
 }
 
-/* Efek saat kursor diarahkan */
+/* Efek hover: kartu sedikit terangkat dan berubah warna */
 
 .link-card:hover {
     transform: translateY(-3px);
-    border-color: var(--muted-color);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
-    background: var(--card-hover-bg);
+    background-color: var(--card-hover-bg);
     border-color: var(--card-hover-border);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
 }
 
-/* Ikon card */
+/* Kotak ikon pada setiap kartu */
 
 .card-icon {
     display: flex;
@@ -285,7 +418,7 @@ body {
     font-weight: 700;
 }
 
-/* Judul dan subjudul card */
+/* Pembungkus judul dan deskripsi kartu */
 
 .card-content {
     flex: 1;
@@ -305,7 +438,7 @@ body {
     line-height: 1.5;
 }
 
-/* Panah di sisi kanan */
+/* Ikon panah di sisi kanan kartu */
 
 .card-arrow {
     flex-shrink: 0;
@@ -317,28 +450,155 @@ body {
         transform 0.2s ease;
 }
 
+/* Efek panah saat kartu diarahkan kursor */
+
 .link-card:hover .card-arrow {
     color: var(--text-color);
     transform: translate(2px, -2px);
 }
 
-/* Fokus keyboard */
+/* Indikator fokus keyboard pada kartu */
 
 .link-card:focus-visible {
     outline: 2px solid var(--logo-color);
     outline-offset: 3px;
 }
 
-/* Responsif tablet dan ponsel */
+
+/* ==================================================
+   11. RESPONSIVE TABLET
+   Menyesuaikan jarak header dan menu untuk layar sedang.
+================================================== */
+
+@media (max-width: 900px) {
+    .header {
+        gap: 16px;
+        padding: 16px 20px;
+    }
+
+    .header-nav {
+        gap: 2px;
+    }
+
+    .nav-link {
+        gap: 6px;
+        padding: 10px 8px;
+        font-size: 13px;
+    }
+}
+
+
+/* ==================================================
+   12. RESPONSIVE MOBILE
+   Mengubah navigasi menjadi hamburger dan kartu
+   menjadi satu kolom pada layar kecil.
+================================================== */
 
 @media (max-width: 700px) {
-    .link-section {
-        padding: 28px 16px;
+
+    /* Susunan header mobile */
+
+    .header {
+        position: relative;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0;
+        padding: 14px 16px;
     }
+
+    .header-brand {
+        order: 1;
+        gap: 10px;
+        min-width: 0;
+    }
+
+
+
+    .logo {
+        width: 40px;
+        height: 40px;
+    }
+
+    .header-title h1 {
+        font-size: 18px;
+    }
+
+    .header-title p {
+        font-size: 11px;
+    }
+
+    /* Tombol tema dan hamburger tetap di kanan atas */
+    .header-actions {
+        order: 2;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-left: auto;
+        flex-shrink: 0;
+    }
+
+    .theme-toggle,
+    .menu-toggle {
+        width: 38px;
+        height: 38px;
+    }
+
+    /* Tampilkan tombol hamburger */
+
+    .menu-toggle {
+        display: flex;
+    }
+
+    /* Menu tertutup secara default dan terbuka
+       ketika JavaScript menambahkan class "is-open" */
+
+    .header-nav {
+        order: 3;
+        display: none;
+        flex: 0 0 100%;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 4px;
+        width: 100%;
+        min-width: 0;
+        margin-top: 14px;
+        padding-top: 12px;
+        border-top: 1px solid var(--border-color);
+    }
+
+    .header-nav.is-open {
+        display: flex;
+    }
+
+    /* Tautan menu memenuhi lebar panel mobile */
+
+    .nav-link {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 12px;
+        font-size: 14px;
+    }
+
+    /* Jarak area kategori pada mobile */
+
+    .link-sections {
+        padding: 24px 16px;
+    }
+
+    .link-section {
+        margin-bottom: 28px;
+    }
+
+    /* Kartu menjadi satu kolom */
 
     .card-container {
         grid-template-columns: 1fr;
         gap: 12px;
+    }
+
+    .section-heading {
+        margin-bottom: 18px;
     }
 
     .section-heading h2 {
@@ -351,69 +611,14 @@ body {
 }
 
 
+/* ==================================================
+   13. RESPONSIVE MOBILE KECIL
+   Penyesuaian tambahan untuk layar maksimal 600px.
+================================================== */
 
-
-/* Pembungkus seluruh kategori */
-
-.link-sections {
-    width: 100%;
-    padding: 28px 20px;
-}
-
-/* Setiap kategori */
-
-.link-section {
-    width: 100%;
-    max-width: none;
-    margin: 0 0 36px;
-    padding: 0;
-}
-
-/* Jarak antara judul dan card */
-
-.section-heading {
-    margin-bottom: 18px;
-}
-
-/* Responsif */
-
-@media (max-width: 700px) {
-    .link-sections {
-        padding: 24px 16px;
+@media (max-width: 600px) {
+    .theme-toggle {
+        width: 40px;
+        height: 40px;
     }
-
-    .link-section {
-        margin-bottom: 28px;
-    }
-}
-
-
-/* =========================
-   FOOTER
-========================= */
-.site-footer {
-    margin-top: 40px;
-    padding: 28px 20px;
-    text-align: center;
-    border-top: 1px solid var(--border-color);
-    background: var(--header-bg);;
-}
-
-.footer-title {
-    margin: 0 0 8px;
-    color: var(--text-color);
-    font-size: 16px;
-    font-weight: 700;
-}
-
-.footer-description {
-    margin: 0 0 14px;
-    color: var(--muted-color);
-    font-size: 13px;
-}
-
-.footer-copyright {
-    margin: 0;
-    color: var(--muted-color);
-    font-size: 12px;
 }
