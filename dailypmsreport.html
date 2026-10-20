@@ -93,9 +93,186 @@
     </header>
 
     <!-- BODY  -->
-    <main class="main-content">
+    <main class="main-content report-main">
 
+        <section class="report-heading">
+            <div class="report-heading-icon">
+                <i data-lucide="clipboard-list" aria-hidden="true"></i>
+            </div>
 
+            <div>
+                <p class="report-eyebrow">TRAINER HUB / REPORT</p>
+                <h2>Daily PMS Report</h2>
+                <p class="report-description">
+                    Catat aktivitas, pekerjaan, dan perkembangan
+                    tugas harian tim trainer.
+                </p>
+            </div>
+        </section>
+
+        <form class="report-form" id="dailyReportForm">
+
+            <!-- INFORMASI PEKERJAAN -->
+            <section class="report-card">
+                <div class="report-card-heading">
+                    <div class="report-section-icon">
+                        <i data-lucide="clipboard-check" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <h3>Informasi Pekerjaan</h3>
+                        <p>Masukkan informasi utama aktivitas.</p>
+                    </div>
+                </div>
+
+                <div class="report-grid">
+
+                    <div class="form-field">
+                        <label for="tanggal">Tanggal <span>*</span></label>
+                        <input type="date" id="tanggal" name="tanggal" required>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="trainer">Trainer <span>*</span></label>
+                        <select id="trainer" name="trainer" required>
+                            <option value="">Memuat daftar trainer...</option>
+                        </select>
+                    </div>
+
+                    <div class="form-field form-field-full">
+                        <label for="property">Property <span>*</span></label>
+                        <select id="property" name="property" required>
+                            <option value="">Memuat daftar property...</option>
+                        </select>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="taskCategory">
+                            Task Category <span>*</span>
+                        </label>
+                        <select id="taskCategory" name="taskCategory" required>
+                            <option value="">Pilih kategori</option>
+                            <option value="Planning">Planning</option>
+                            <option value="Un-Planning">Un-Planning</option>
+                        </select>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="statusTask">Status Task <span>*</span></label>
+                        <select id="statusTask" name="statusTask" required>
+                            <option value="">Pilih status</option>
+                            <option value="On Progress">On Progress</option>
+                            <option value="Pending">Pending</option>
+                            <option value="Eksklasi">Eksklasi</option>
+                            <option value="Done">Done</option>
+                            <option value="Waiting to Response">
+                                Waiting to Response
+                            </option>
+                            <option value="No Response">No Response</option>
+                        </select>
+                    </div>
+
+                    <div class="form-field form-field-full">
+                        <label for="komponen">
+                            Komponen Pekerjaan <span>*</span>
+                        </label>
+                        <select id="komponen" name="komponen" required>
+                            <option value="">Pilih komponen pekerjaan</option>
+                            <option value="SETUP PRINTER">SETUP PRINTER</option>
+                            <option value="SETUP SISTEM">SETUP SISTEM</option>
+                            <option value="MIGRASI DATA">MIGRASI DATA</option>
+                            <option value="REFRESH TRAINING">REFRESH TRAINING</option>
+                            <option value="PENAMBAHAN PENDAMPINGAN">PENAMBAHAN PENDAMPINGAN</option>
+                            <option value="REQUEST REPORT">REQUEST REPORT</option>
+                            <option value="SERAH TERIMA">SERAH TERIMA</option>
+                            <option value="PERTANYAAN PERSONAL TENTANG SISTEM">PERTANYAAN PERSONAL TENTANG SISTEM
+                            </option>
+                            <option value="PREPARE DATA CLOSING">PREPARE DATA CLOSING</option>
+                            <option value="TESTING SISTEM">TESTING SISTEM</option>
+                            <option value="MEETING">MEETING</option>
+                            <option value="BACKUP TEAM CS">BACKUP TEAM CS</option>
+                            <option value="ESKALASI DARI CS">ESKALASI DARI CS</option>
+                            <option value="ADMINISTRASI OMNIH">ADMINISTRASI OMNIH</option>
+                            <option value="ESKALASI DARI BOD">ESKALASI DARI BOD</option>
+                            <option value="MAINTENANCE">MAINTENANCE</option>
+                            <option value="DIRECT TIKET DILUAR JAM KERJA">DIRECT TIKET DILUAR JAM KERJA</option>
+                            <option value="TRAINING NEW USER">TRAINING NEW USER</option>
+                            <option value="DIRECT CHAT">DIRECT CHAT</option>
+                            <option value="MONITORING">MONITORING</option>
+                            <option value="ESKALASI BD">ESKALASI BD</option>
+                            <option value="REQUEST EMAIL">REQUEST EMAIL</option>
+                            <option value="PENDAMPINGAN LIVE">PENDAMPINGAN LIVE</option>
+                            <option value="Training Trainer">Training Trainer</option>
+                            <option value="Pra Setup">Pra Setup</option>
+                        </select>
+                    </div>
+
+                    <div class="form-field form-field-full">
+                        <label for="detailPekerjaan">
+                            Detail Pekerjaan <span>*</span>
+                        </label>
+                        <textarea id="detailPekerjaan" name="detailPekerjaan" rows="4"
+                            placeholder="Tuliskan detail pekerjaan yang dilakukan..." required></textarea>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- PENYELESAIAN DAN ESKALASI -->
+            <section class="report-card">
+                <div class="report-card-heading">
+                    <div class="report-section-icon">
+                        <i data-lucide="calendar-check" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <h3>Penyelesaian dan Eskalasi</h3>
+                        <p>Lengkapi informasi penyelesaian dan tindak lanjut.</p>
+                    </div>
+                </div>
+
+                <div class="report-grid">
+
+                    <div class="form-field">
+                        <label for="tanggalSelesai">Tanggal Selesai</label>
+                        <input type="date" id="tanggalSelesai" name="tanggalSelesai">
+                    </div>
+
+                    <div class="form-field">
+                        <label for="eskalasi">Eskalasi</label>
+                        <select id="eskalasi" name="eskalasi">
+                            <option value="">Pilih eskalasi (opsional)</option>
+                            <option value="DSI">DSI</option>
+                            <option value="CS">CS</option>
+                            <option value="BOD">BOD</option>
+                            <option value="Trainer">Trainer</option>
+                        </select>
+                    </div>
+
+                    <div class="form-field form-field-full">
+                        <label for="keterangan">Keterangan</label>
+                        <textarea id="keterangan" name="keterangan" rows="4"
+                            placeholder="Tambahkan keterangan jika diperlukan..."></textarea>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- FORM ACTIONS -->
+            <div class="report-form-actions">
+                <p class="report-required-note">
+                    <span>*</span> Wajib diisi
+                </p>
+
+                <button class="report-submit" type="submit">
+                    <i data-lucide="send" aria-hidden="true"></i>
+                    <span>Uji Tampilan Form</span>
+                </button>
+            </div>
+
+            <p class="report-test-notice" id="reportTestNotice" role="status" hidden>
+                Tampilan form berfungsi. Data belum dikirim ke spreadsheet.
+            </p>
+
+        </form>
     </main>
 
 
@@ -116,6 +293,110 @@
 <script>
     lucide.createIcons();
 </script>
+
+
+
+
+<script>
+    // URL Web App dari Google Apps Script
+    const MASTER_DATA_URL = "https://script.google.com/macros/library/d/1HaoIddjIJxTIPricHjiI_BxjDSZq-8aCBFYDDjKOx4vfu8A-hbrYH7aZ/2";
+
+    // Aktifkan ikon Lucide
+    if (window.lucide) {
+        window.lucide.createIcons();
+    }
+
+    // Tahun footer
+    const currentYear = document.getElementById("currentYear");
+
+    if (currentYear) {
+        currentYear.textContent = new Date().getFullYear();
+    }
+
+    // Isi dropdown dari data Google Spreadsheet
+    window.handleMasterData = function (result) {
+        const trainerSelect = document.getElementById("trainer");
+        const propertySelect = document.getElementById("property");
+
+        if (!result || !result.success) {
+            trainerSelect.innerHTML =
+                '<option value="">Gagal memuat trainer</option>';
+            propertySelect.innerHTML =
+                '<option value="">Gagal memuat property</option>';
+
+            console.error(
+                "Gagal memuat master data:",
+                result ? result.message : "Respons tidak valid"
+            );
+            return;
+        }
+
+        // Dropdown Trainer
+        trainerSelect.innerHTML =
+            '<option value="">Pilih trainer</option>';
+
+        result.trainers.forEach(function (trainer) {
+            const option = document.createElement("option");
+            option.value = trainer.name;
+            option.textContent = trainer.name;
+            option.dataset.code = trainer.code;
+            trainerSelect.appendChild(option);
+        });
+
+        // Dropdown Property
+        propertySelect.innerHTML =
+            '<option value="">Pilih property</option>';
+
+        result.properties.forEach(function (property) {
+            const option = document.createElement("option");
+            option.value = property.name;
+            option.textContent = property.name;
+            propertySelect.appendChild(option);
+        });
+    };
+
+    // Ambil data master ketika halaman dibuka
+    if (MASTER_DATA_URL !== "https://script.google.com/macros/library/d/1HaoIddjIJxTIPricHjiI_BxjDSZq-8aCBFYDDjKOx4vfu8A-hbrYH7aZ/2") {
+        const masterScript = document.createElement("script");
+
+        masterScript.src = MASTER_DATA_URL;
+        masterScript.async = true;
+
+        masterScript.onerror = function () {
+            document.getElementById("trainer").innerHTML =
+                '<option value="">Gagal terhubung ke server</option>';
+
+            document.getElementById("property").innerHTML =
+                '<option value="">Gagal terhubung ke server</option>';
+
+            console.error("Tidak dapat memuat data master.");
+        };
+
+        document.body.appendChild(masterScript);
+    } else {
+        console.warn("URL Web App belum diatur.");
+    }
+
+    // Tombol masih untuk menguji tampilan, bukan mengirim data
+    document.getElementById("dailyReportForm")
+        .addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            const notice =
+                document.getElementById("reportTestNotice");
+
+            notice.textContent =
+                "Validasi form berhasil. Data belum dikirim ke spreadsheet.";
+
+            notice.hidden = false;
+
+            notice.scrollIntoView({
+                behavior: "smooth",
+                block: "nearest"
+            });
+        });
+</script>
+
 
 
 </html>
