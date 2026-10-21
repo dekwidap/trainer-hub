@@ -1261,3 +1261,250 @@ body {
         padding: 11px 12px;
     }
 }
+
+
+/* ========================================
+   HALAMAN LIHAT LAPORAN
+   ======================================== */
+
+.report-page {
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 28px 0;
+    color: var(--text-color);
+}
+
+/* Judul halaman */
+
+.report-page-header {
+    margin-bottom: 24px;
+}
+
+.report-page-header h2 {
+    margin: 0 0 8px;
+    color: var(--text-color);
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+
+.report-page-header p {
+    margin: 0;
+    color: var(--muted-color);
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* Filter Bulan, Tahun, Trainer */
+
+.report-filters {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
+    padding: 20px;
+    background: var(--header-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+}
+
+.report-filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+}
+
+.report-filter-group label {
+    color: var(--text-color);
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.report-filter-group select {
+    width: 100%;
+    min-height: 42px;
+    padding: 10px 12px;
+    color: var(--text-color);
+    background-color: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font: inherit;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.report-filter-group select:focus {
+    outline: none;
+    border-color: var(--logo-color);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--logo-color) 15%, transparent);
+}
+
+/* Pesan status tabel */
+
+.report-table-message {
+    margin: 0 0 12px;
+    color: var(--muted-color);
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+/* Pembungkus tabel agar responsif */
+
+.report-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    background: var(--header-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    scrollbar-width: thin;
+}
+
+/* Tabel laporan */
+
+.report-table {
+    width: 100%;
+    min-width: 1100px;
+    border-collapse: separate;
+    border-spacing: 0;
+    color: var(--text-color);
+    font-size: 0.875rem;
+}
+
+.report-table th,
+.report-table td {
+    padding: 14px 16px;
+    text-align: left;
+    vertical-align: top;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.report-table th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: var(--bg-color);
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.report-table th button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0;
+    color: var(--text-color);
+    background: transparent;
+    border: none;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.report-table th button:hover {
+    color: var(--logo-color);
+}
+
+.report-table th button:focus-visible {
+    outline: 2px solid var(--logo-color);
+    outline-offset: 4px;
+    border-radius: 2px;
+}
+
+.report-table td {
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+
+.report-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.report-table tbody tr:hover {
+    background: var(--card-hover-bg);
+}
+
+/* Pesan saat tabel belum memiliki data */
+
+.report-table tbody td[colspan] {
+    padding: 32px 16px;
+    color: var(--muted-color);
+    text-align: center;
+}
+
+/* Pagination */
+
+.report-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.report-pagination p {
+    margin: 0;
+    color: var(--muted-color);
+    font-size: 0.875rem;
+}
+
+.report-pagination-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.report-pagination-actions button {
+    min-height: 40px;
+    padding: 9px 16px;
+    color: var(--text-color);
+    background: var(--header-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font: inherit;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.report-pagination-actions button:hover:not(:disabled) {
+    background: var(--card-hover-bg);
+    border-color: var(--logo-color);
+}
+
+.report-pagination-actions button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+/* Tablet dan layar kecil */
+
+@media (max-width: 768px) {
+    .report-page {
+        padding: 20px 0;
+    }
+
+    .report-page-header h2 {
+        font-size: 1.35rem;
+    }
+
+    .report-filters {
+        grid-template-columns: 1fr;
+        gap: 14px;
+        padding: 16px;
+    }
+
+    .report-pagination {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .report-pagination-actions {
+        width: 100%;
+    }
+
+    .report-pagination-actions button {
+        flex: 1;
+    }
+}
