@@ -177,6 +177,37 @@
                 <!-- DAFTAR LAPORAN -->
                 <div class="report-entries" id="reportEntries"></div>
 
+                <datalist id="propertyOptions"></datalist>
+
+                <datalist id="componentOptions">
+                    <option value="SETUP PRINTER">
+                    <option value="SETUP SISTEM">
+                    <option value="MIGRASI DATA">
+                    <option value="REFRESH TRAINING">
+                    <option value="PENAMBAHAN PENDAMPINGAN">
+                    <option value="REQUEST REPORT">
+                    <option value="SERAH TERIMA">
+                    <option value="PERTANYAAN PERSONAL TENTANG SISTEM">
+                    <option value="PREPARE DATA CLOSING">
+                    <option value="TESTING SISTEM">
+                    <option value="MEETING">
+                    <option value="BACKUP TEAM CS">
+                    <option value="ESKALASI DARI CS">
+                    <option value="ADMINISTRASI OMNIH">
+                    <option value="ESKALASI DARI BOD">
+                    <option value="MAINTENANCE">
+                    <option value="DIRECT TIKET DILUAR JAM KERJA">
+                    <option value="TRAINING NEW USER">
+                    <option value="DIRECT CHAT">
+                    <option value="MONITORING">
+                    <option value="ESKALASI BD">
+                    <option value="REQUEST EMAIL">
+                    <option value="PENDAMPINGAN LIVE">
+                    <option value="Training Trainer">
+                    <option value="Pra Setup">
+                </datalist>
+
+
                 <!-- TAMBAH LAPORAN -->
                 <div class="report-add-action">
                     <button class="report-add-button" type="button" id="addReportButton">
@@ -274,25 +305,23 @@
         propertyMasterData = result.properties || [];
 
         document.querySelectorAll(".report-property").forEach(
-            populatePropertySelect
+            populatePropertyOptions()
         );
     };
 
-    function populatePropertySelect(select) {
-        const previousValue = select.value;
 
-        select.innerHTML =
-            '<option value="" hidden>Pilih property</option>';
+    function populatePropertyOptions() {
+        const propertyOptions = document.getElementById("propertyOptions");
+
+        propertyOptions.replaceChildren();
 
         propertyMasterData.forEach(function (property) {
             const option = document.createElement("option");
             option.value = property.name;
-            option.textContent = property.name;
-            select.appendChild(option);
+            propertyOptions.appendChild(option);
         });
-
-        select.value = previousValue;
     }
+
 
     function createReportEntry() {
         const container = document.getElementById("reportEntries");
@@ -325,9 +354,14 @@
         <div class="report-grid">
             <div class="form-field form-field-full">
                 <label>Property <span>*</span></label>
-                <select class="report-property" required>
-                    <option value="">Memuat daftar property...</option>
-                </select>
+                <input
+                    type="text"
+                    class="report-property"
+                    list="propertyOptions"
+                    placeholder="Ketik nama property..."
+                    autocomplete="off"
+                    required
+                >
             </div>
 
             <div class="form-field">
@@ -354,34 +388,14 @@
 
             <div class="form-field form-field-full">
                 <label>Komponen Pekerjaan <span>*</span></label>
-                <select class="report-komponen" required>
-                    <option value="" hidden>Pilih komponen pekerjaan</option>
-                    <option value="SETUP PRINTER">SETUP PRINTER</option>
-                    <option value="SETUP SISTEM">SETUP SISTEM</option>
-                    <option value="MIGRASI DATA">MIGRASI DATA</option>
-                    <option value="REFRESH TRAINING">REFRESH TRAINING</option>
-                    <option value="PENAMBAHAN PENDAMPINGAN">PENAMBAHAN PENDAMPINGAN</option>
-                    <option value="REQUEST REPORT">REQUEST REPORT</option>
-                    <option value="SERAH TERIMA">SERAH TERIMA</option>
-                    <option value="PERTANYAAN PERSONAL TENTANG SISTEM">PERTANYAAN PERSONAL TENTANG SISTEM</option>
-                    <option value="PREPARE DATA CLOSING">PREPARE DATA CLOSING</option>
-                    <option value="TESTING SISTEM">TESTING SISTEM</option>
-                    <option value="MEETING">MEETING</option>
-                    <option value="BACKUP TEAM CS">BACKUP TEAM CS</option>
-                    <option value="ESKALASI DARI CS">ESKALASI DARI CS</option>
-                    <option value="ADMINISTRASI OMNIH">ADMINISTRASI OMNIH</option>
-                    <option value="ESKALASI DARI BOD">ESKALASI DARI BOD</option>
-                    <option value="MAINTENANCE">MAINTENANCE</option>
-                    <option value="DIRECT TIKET DILUAR JAM KERJA">DIRECT TIKET DILUAR JAM KERJA</option>
-                    <option value="TRAINING NEW USER">TRAINING NEW USER</option>
-                    <option value="DIRECT CHAT">DIRECT CHAT</option>
-                    <option value="MONITORING">MONITORING</option>
-                    <option value="ESKALASI BD">ESKALASI BD</option>
-                    <option value="REQUEST EMAIL">REQUEST EMAIL</option>
-                    <option value="PENDAMPINGAN LIVE">PENDAMPINGAN LIVE</option>
-                    <option value="Training Trainer">Training Trainer</option>
-                    <option value="Pra Setup">Pra Setup</option>
-                </select>
+                    <input
+                        type="text"
+                        class="report-komponen"
+                        list="componentOptions"
+                        placeholder="Ketik komponen pekerjaan..."
+                        autocomplete="off"
+                        required
+                    >
             </div>
 
             <div class="form-field form-field-full">
@@ -397,7 +411,6 @@
     `;
 
         container.appendChild(entry);
-        populatePropertySelect(entry.querySelector(".report-property"));
 
         entry.querySelector(".report-remove-button").addEventListener(
             "click",
