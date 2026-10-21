@@ -150,83 +150,18 @@
                         </select>
                     </div>
 
-                    <div class="form-field form-field-full">
-                        <label for="property">Property <span>*</span></label>
-                        <select id="property" name="property" required>
-                            <option value="">Memuat daftar property...</option>
-                        </select>
-                    </div>
-
-                    <div class="form-field">
-                        <label for="taskCategory">
-                            Task Category <span>*</span>
-                        </label>
-                        <select id="taskCategory" name="taskCategory" required>
-                            <option value="" disabled selected hidden>Pilih kategori</option>
-                            <option value="PLANNING">Planning</option>
-                            <option value="UN-PLANNING">Un-Planning</option>
-                        </select>
-                    </div>
-
-                    <div class="form-field">
-                        <label for="statusTask">Status Task <span>*</span></label>
-                        <select id="statusTask" name="statusTask" required>
-                            <option value="" disabled selected hidden>Pilih status</option>
-                            <option value="On progress">On Progress</option>
-                            <option value="Pending">Pending</option>
-                            <option value="Eskalasi">Eskalasi</option>
-                            <option value="Done">Done</option>
-                            <option value="Waiting Response">
-                                Waiting Response
-                            </option>
-                            <option value="No Progress">No Progress</option>
-                        </select>
-                    </div>
-
-                    <div class="form-field form-field-full">
-                        <label for="komponen">
-                            Komponen Pekerjaan <span>*</span>
-                        </label>
-                        <select id="komponen" name="komponen" required>
-                            <option value="" disabled selected hidden>Pilih komponen pekerjaan</option>
-                            <option value="SETUP PRINTER">SETUP PRINTER</option>
-                            <option value="SETUP SISTEM">SETUP SISTEM</option>
-                            <option value="MIGRASI DATA">MIGRASI DATA</option>
-                            <option value="REFRESH TRAINING">REFRESH TRAINING</option>
-                            <option value="PENAMBAHAN PENDAMPINGAN">PENAMBAHAN PENDAMPINGAN</option>
-                            <option value="REQUEST REPORT">REQUEST REPORT</option>
-                            <option value="SERAH TERIMA">SERAH TERIMA</option>
-                            <option value="PERTANYAAN PERSONAL TENTANG SISTEM">PERTANYAAN PERSONAL TENTANG SISTEM
-                            </option>
-                            <option value="PREPARE DATA CLOSING">PREPARE DATA CLOSING</option>
-                            <option value="TESTING SISTEM">TESTING SISTEM</option>
-                            <option value="MEETING">MEETING</option>
-                            <option value="BACKUP TEAM CS">BACKUP TEAM CS</option>
-                            <option value="ESKALASI DARI CS">ESKALASI DARI CS</option>
-                            <option value="ADMINISTRASI OMNIH">ADMINISTRASI OMNIH</option>
-                            <option value="ESKALASI DARI BOD">ESKALASI DARI BOD</option>
-                            <option value="MAINTENANCE">MAINTENANCE</option>
-                            <option value="DIRECT TIKET DILUAR JAM KERJA">DIRECT TIKET DILUAR JAM KERJA</option>
-                            <option value="TRAINING NEW USER">TRAINING NEW USER</option>
-                            <option value="DIRECT CHAT">DIRECT CHAT</option>
-                            <option value="MONITORING">MONITORING</option>
-                            <option value="ESKALASI BD">ESKALASI BD</option>
-                            <option value="REQUEST EMAIL">REQUEST EMAIL</option>
-                            <option value="PENDAMPINGAN LIVE">PENDAMPINGAN LIVE</option>
-                            <option value="Training Trainer">Training Trainer</option>
-                            <option value="Pra Setup">Pra Setup</option>
-                        </select>
-                    </div>
-
-                    <div class="form-field form-field-full">
-                        <label for="detailPekerjaan">
-                            Detail Pekerjaan <span>*</span>
-                        </label>
-                        <textarea id="detailPekerjaan" name="detailPekerjaan" rows="4"
-                            placeholder="Tuliskan detail pekerjaan yang dilakukan..." required></textarea>
-                    </div>
-
                 </div>
+                <!-- DAFTAR LAPORAN -->
+                <div class="report-entries" id="reportEntries"></div>
+
+                <!-- TAMBAH LAPORAN -->
+                <div class="report-add-action">
+                    <button class="report-add-button" type="button" id="addReportButton">
+                        <i data-lucide="plus" aria-hidden="true"></i>
+                        <span>Tambah Laporan</span>
+                    </button>
+                </div>
+
             </section>
 
             <!-- FORM ACTIONS -->
@@ -285,15 +220,15 @@
     }
 
     // Isi dropdown dari data Google Spreadsheet
+
+    let propertyMasterData = [];
+
     window.handleMasterData = function (result) {
         const trainerSelect = document.getElementById("trainer");
-        const propertySelect = document.getElementById("property");
 
         if (!result || !result.success) {
             trainerSelect.innerHTML =
                 '<option value="">Gagal memuat trainer</option>';
-            propertySelect.innerHTML =
-                '<option value="">Gagal memuat property</option>';
 
             console.error(
                 "Gagal memuat master data:",
@@ -302,7 +237,6 @@
             return;
         }
 
-        // Dropdown Trainer
         trainerSelect.innerHTML =
             '<option value="" hidden>Pilih trainer</option>';
 
@@ -314,17 +248,182 @@
             trainerSelect.appendChild(option);
         });
 
-        // Dropdown Property
-        propertySelect.innerHTML =
+        propertyMasterData = result.properties || [];
+
+        document.querySelectorAll(".report-property").forEach(
+            populatePropertySelect
+        );
+    };
+
+    function populatePropertySelect(select) {
+        const previousValue = select.value;
+
+        select.innerHTML =
             '<option value="" hidden>Pilih property</option>';
 
-        result.properties.forEach(function (property) {
+        propertyMasterData.forEach(function (property) {
             const option = document.createElement("option");
             option.value = property.name;
             option.textContent = property.name;
-            propertySelect.appendChild(option);
+            select.appendChild(option);
         });
-    };
+
+        select.value = previousValue;
+    }
+
+    function createReportEntry() {
+        const container = document.getElementById("reportEntries");
+        const reportNumber = container.children.length + 1;
+
+        const entry = document.createElement("section");
+        entry.className = "report-card report-entry";
+
+        entry.innerHTML = `
+        <div class="report-card-heading">
+            <div class="report-section-icon">
+                <i data-lucide="clipboard-list" aria-hidden="true"></i>
+            </div>
+            <div>
+                <h3 class="report-entry-title">
+                    Laporan ${reportNumber}
+                </h3>
+                <p>Masukkan detail untuk laporan ini.</p>
+            </div>
+            <button
+                type="button"
+                class="report-remove-button"
+                aria-label="Hapus laporan ${reportNumber}"
+                title="Hapus laporan"
+            >
+                <i data-lucide="trash-2" aria-hidden="true"></i>
+            </button>
+        </div>
+
+        <div class="report-grid">
+            <div class="form-field form-field-full">
+                <label>Property <span>*</span></label>
+                <select class="report-property" required>
+                    <option value="">Memuat daftar property...</option>
+                </select>
+            </div>
+
+            <div class="form-field">
+                <label>Task Category <span>*</span></label>
+                <select class="report-task-category" required>
+                    <option value="" hidden>Pilih kategori</option>
+                    <option value="PLANNING">Planning</option>
+                    <option value="UN-PLANNING">Un-Planning</option>
+                </select>
+            </div>
+
+            <div class="form-field">
+                <label>Status Task <span>*</span></label>
+                <select class="report-status" required>
+                    <option value="" hidden>Pilih status</option>
+                    <option value="On progress">On Progress</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Eskalasi">Eskalasi</option>
+                    <option value="Done">Done</option>
+                    <option value="Waiting Response">Waiting Response</option>
+                    <option value="No Progress">No Progress</option>
+                </select>
+            </div>
+
+            <div class="form-field form-field-full">
+                <label>Komponen Pekerjaan <span>*</span></label>
+                <select class="report-komponen" required>
+                    <option value="" hidden>Pilih komponen pekerjaan</option>
+                    <option value="SETUP PRINTER">SETUP PRINTER</option>
+                    <option value="SETUP SISTEM">SETUP SISTEM</option>
+                    <option value="MIGRASI DATA">MIGRASI DATA</option>
+                    <option value="REFRESH TRAINING">REFRESH TRAINING</option>
+                    <option value="PENAMBAHAN PENDAMPINGAN">PENAMBAHAN PENDAMPINGAN</option>
+                    <option value="REQUEST REPORT">REQUEST REPORT</option>
+                    <option value="SERAH TERIMA">SERAH TERIMA</option>
+                    <option value="PERTANYAAN PERSONAL TENTANG SISTEM">PERTANYAAN PERSONAL TENTANG SISTEM</option>
+                    <option value="PREPARE DATA CLOSING">PREPARE DATA CLOSING</option>
+                    <option value="TESTING SISTEM">TESTING SISTEM</option>
+                    <option value="MEETING">MEETING</option>
+                    <option value="BACKUP TEAM CS">BACKUP TEAM CS</option>
+                    <option value="ESKALASI DARI CS">ESKALASI DARI CS</option>
+                    <option value="ADMINISTRASI OMNIH">ADMINISTRASI OMNIH</option>
+                    <option value="ESKALASI DARI BOD">ESKALASI DARI BOD</option>
+                    <option value="MAINTENANCE">MAINTENANCE</option>
+                    <option value="DIRECT TIKET DILUAR JAM KERJA">DIRECT TIKET DILUAR JAM KERJA</option>
+                    <option value="TRAINING NEW USER">TRAINING NEW USER</option>
+                    <option value="DIRECT CHAT">DIRECT CHAT</option>
+                    <option value="MONITORING">MONITORING</option>
+                    <option value="ESKALASI BD">ESKALASI BD</option>
+                    <option value="REQUEST EMAIL">REQUEST EMAIL</option>
+                    <option value="PENDAMPINGAN LIVE">PENDAMPINGAN LIVE</option>
+                    <option value="Training Trainer">Training Trainer</option>
+                    <option value="Pra Setup">Pra Setup</option>
+                </select>
+            </div>
+
+            <div class="form-field form-field-full">
+                <label>Detail Pekerjaan <span>*</span></label>
+                <textarea
+                    class="report-detail"
+                    rows="4"
+                    placeholder="Tuliskan detail pekerjaan yang dilakukan..."
+                    required
+                ></textarea>
+            </div>
+        </div>
+    `;
+
+        container.appendChild(entry);
+        populatePropertySelect(entry.querySelector(".report-property"));
+
+        entry.querySelector(".report-remove-button").addEventListener(
+            "click",
+            function () {
+                if (container.children.length <= 1) {
+                    return;
+                }
+
+                entry.remove();
+                updateReportEntryTitles();
+            }
+        );
+
+        if (window.lucide) {
+            window.lucide.createIcons();
+        }
+
+        updateReportEntryTitles();
+    }
+
+    function updateReportEntryTitles() {
+        document.querySelectorAll(".report-entry").forEach(
+            function (entry, index) {
+                const number = index + 1;
+                entry.querySelector(".report-entry-title").textContent =
+                    "Laporan " + number;
+
+                const removeButton =
+                    entry.querySelector(".report-remove-button");
+
+                removeButton.setAttribute(
+                    "aria-label",
+                    "Hapus laporan " + number
+                );
+
+                removeButton.disabled =
+                    document.querySelectorAll(".report-entry").length <= 1;
+            }
+        );
+    }
+
+    document.getElementById("addReportButton").addEventListener(
+        "click",
+        createReportEntry
+    );
+
+    // Tampilkan satu kartu saat halaman dibuka.
+    createReportEntry();
+
 
     // Ambil data master ketika halaman dibuka
     if (MASTER_DATA_URL !== "") {
@@ -337,8 +436,10 @@
             document.getElementById("trainer").innerHTML =
                 '<option value="">Gagal terhubung ke server</option>';
 
-            document.getElementById("property").innerHTML =
-                '<option value="">Gagal terhubung ke server</option>';
+            document.querySelectorAll(".report-property").forEach(function (select) {
+                select.innerHTML =
+                    '<option value="">Gagal terhubung ke server</option>';
+            });
 
             console.error("Tidak dapat memuat data master.");
         };
@@ -370,19 +471,30 @@
             return;
         }
 
-        const formData = new FormData(reportForm);
+
+        const reportEntries = Array.from(
+            document.querySelectorAll(".report-entry")
+        );
+
+        const reports = reportEntries.map(function (entry) {
+            return {
+                property: entry.querySelector(".report-property").value,
+                taskCategory: entry.querySelector(".report-task-category").value,
+                status: entry.querySelector(".report-status").value,
+                komponen: entry.querySelector(".report-komponen").value,
+                detail: entry.querySelector(".report-detail").value.trim()
+            };
+        });
 
         const payload = {
-            tanggal: formData.get("tanggal"),
-            trainer: formData.get("trainer"),
-            property: formData.get("property"),
-            taskCategory: formData.get("taskCategory"),
-            status: formData.get("statusTask"),
-            komponen: formData.get("komponen"),
-            detail: formData.get("detailPekerjaan"),
+            tanggal: document.getElementById("tanggal").value,
+            trainer: document.getElementById("trainer").value,
+            reports: reports,
             requestToken: String(Date.now()) + "-" +
                 Math.random().toString(36).slice(2)
         };
+
+
 
         activeRequestToken = payload.requestToken;
 
@@ -460,6 +572,12 @@
 
         if (result.success) {
             reportForm.reset();
+
+            const reportEntries =
+                document.getElementById("reportEntries");
+
+            reportEntries.innerHTML = "";
+            createReportEntry();
 
             Swal.fire({
                 icon: "success",
