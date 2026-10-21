@@ -615,12 +615,24 @@
             reportEntries.innerHTML = "";
             createReportEntry();
 
+
             Swal.fire({
                 icon: "success",
-                title: "Berhasil!",
-                text: result.message || "Data berhasil disimpan ke spreadsheet.",
-                confirmButtonText: "Selesai"
+                title: "Laporan Berhasil Dikirim!",
+                text: "Data Daily PMS Report berhasil disimpan.",
+                showCancelButton: true,
+                confirmButtonText: "Lihat Laporan",
+                cancelButtonText: "Input Lagi",
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "readdailypmsreport.html";
+                }
+
+                // Jika memilih "Input Lagi" atau menutup popup,
+                // pengguna tetap berada di halaman input.
             });
+
         } else {
             Swal.fire({
                 icon: "error",
