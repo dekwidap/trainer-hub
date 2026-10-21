@@ -5,8 +5,7 @@
 ========================= */
 
 const currentPage = window.location.pathname.split("/").pop() || "index.html";
-
-document.querySelectorAll(".header-nav .nav-link").forEach(function (link) {
+document.querySelectorAll("a.nav-link[href]").forEach(function (link) {
     const linkPage = link.getAttribute("href").split("/").pop();
 
     if (linkPage === currentPage) {
@@ -128,8 +127,9 @@ if (menuToggle && headerNav) {
         setMenuState(!isOpen);
     });
 
-    // Tutup menu setelah tautan dipilih
-    headerNav.querySelectorAll(".nav-link").forEach(function (link) {
+    // Tutup menu hanya setelah tautan halaman dipilih,
+    // bukan ketika tombol dropdown diklik.
+    headerNav.querySelectorAll("a.nav-link[href]").forEach(function (link) {
         link.addEventListener("click", function () {
             setMenuState(false);
         });
@@ -150,3 +150,36 @@ if (menuToggle && headerNav) {
     });
 }
 
+
+
+document.querySelectorAll(".nav-dropdown").forEach(function (dropdown) {
+    const toggle = dropdown.querySelector(".nav-dropdown-toggle");
+
+    if (!toggle) return;
+
+    toggle.addEventListener("click", function (event) {
+        // Desktop menggunakan hover, bukan klik
+        if (window.innerWidth > 700) {
+            event.preventDefault();
+            return;
+        }
+
+        // Mobile menggunakan klik
+        event.preventDefault();
+        event.stopPropagation();
+
+        const isOpen = dropdown.classList.toggle("is-open");
+        toggle.setAttribute("aria-expanded", String(isOpen));
+    });
+
+    // Tutup dropdown saat klik di luar, khusus mobile
+    document.addEventListener("click", function (event) {
+        if (
+            window.innerWidth <= 700 &&
+            !dropdown.contains(event.target)
+        ) {
+            dropdown.classList.remove("is-open");
+            toggle.setAttribute("aria-expanded", "false");
+        }
+    });
+});

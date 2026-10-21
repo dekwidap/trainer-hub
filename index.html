@@ -60,10 +60,33 @@
                 <span>Link Shortcut</span>
             </a>
 
-            <a href="dailypmsreport.html" class="nav-link">
-                <i data-lucide="chart-no-axes-column" aria-hidden="true"></i>
-                <span>Daily PMS Report</span>
-            </a>
+
+            <!-- Dropdown Daily PMS Report -->
+            <div class="nav-dropdown" id="dailyReportDropdown">
+
+                <button class="nav-link nav-dropdown-toggle" id="dailyReportToggle" type="button" aria-expanded="false"
+                    aria-controls="dailyReportSubmenu">
+
+                    <i data-lucide="chart-no-axes-column" aria-hidden="true"></i>
+                    <span>Daily PMS Report</span>
+                    <i data-lucide="chevron-down" class="dropdown-chevron" aria-hidden="true"></i>
+                </button>
+
+                <div class="nav-submenu" id="dailyReportSubmenu">
+
+                    <a href="dailypmsreport.html" class="nav-sublink">
+                        <i data-lucide="file-pen-line" aria-hidden="true"></i>
+                        <span>Input Laporan</span>
+                    </a>
+
+                    <a href="read dailypmsreport.html" class="nav-sublink">
+                        <i data-lucide="file-text" aria-hidden="true"></i>
+                        <span>Lihat Laporan</span>
+                    </a>
+
+                </div>
+            </div>
+
 
         </nav>
 
