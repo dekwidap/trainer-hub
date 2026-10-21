@@ -12,6 +12,16 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <script>
+        (function () {
+            const savedTheme = localStorage.getItem("trainerHubTheme");
+
+            if (savedTheme === "dark") {
+                document.documentElement.classList.add("dark-mode");
+            }
+        })();
+    </script>
+
 </head>
 
 

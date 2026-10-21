@@ -25,7 +25,9 @@ document.querySelectorAll(".header-nav .nav-link").forEach(function (link) {
 const themeToggle = document.getElementById("themeToggle");
 const themeIcon = document.getElementById("themeIcon");
 
-// Ikon matahari untuk Light Mode
+const THEME_KEY = "trainerHubTheme";
+
+// Ikon matahari
 const sunIcon = `
     <circle cx="12" cy="12" r="4"/>
     <path d="M12 2v2"/>
@@ -38,31 +40,48 @@ const sunIcon = `
     <path d="m17.65 6.35 1.42-1.42"/>
 `;
 
-// Ikon bulan untuk Dark Mode
+// Ikon bulan
 const moonIcon = `
     <path d="M20.9 13A9 9 0 0 1 11 3.1
     9 9 0 1 0 20.9 13Z"/>
 `;
 
-themeToggle.addEventListener("click", function () {
-    // Ganti tema halaman
-    const isDark = document.body.classList.toggle("dark-mode");
+// Mengatur ikon dan label tombol sesuai tema
+function updateThemeButton(isDark) {
+    themeIcon.innerHTML = isDark ? moonIcon : sunIcon;
 
-    // Ganti ikon dan label aksesibilitas
-    if (isDark) {
-        themeIcon.innerHTML = moonIcon;
-        themeToggle.setAttribute(
-            "aria-label",
-            "Aktifkan light mode"
-        );
-    } else {
-        themeIcon.innerHTML = sunIcon;
-        themeToggle.setAttribute(
-            "aria-label",
-            "Aktifkan dark mode"
-        );
-    }
+    themeToggle.setAttribute(
+        "aria-label",
+        isDark ? "Aktifkan light mode" : "Aktifkan dark mode"
+    );
+}
+
+// Membaca tema terakhir ketika halaman dibuka
+const savedTheme = localStorage.getItem(THEME_KEY);
+const isDarkInitially = savedTheme === "dark";
+
+document.documentElement.classList.toggle("dark-mode", isDarkInitially);
+document.body.classList.toggle("dark-mode", isDarkInitially);
+
+updateThemeButton(isDarkInitially);
+
+// Mengganti dan menyimpan tema ketika tombol diklik
+
+themeToggle.addEventListener("click", function () {
+    const isDark = !document.documentElement.classList.contains("dark-mode");
+
+    document.documentElement.classList.toggle("dark-mode", isDark);
+    document.body.classList.toggle("dark-mode", isDark);
+
+    localStorage.setItem(
+        THEME_KEY,
+        isDark ? "dark" : "light"
+    );
+
+    updateThemeButton(isDark);
 });
+
+
 
 
 

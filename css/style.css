@@ -30,6 +30,7 @@
    class "dark-mode". Class ini dikontrol JavaScript.
 ================================================== */
 
+html.dark-mode,
 body.dark-mode {
     color-scheme: dark;
 
@@ -980,6 +981,7 @@ body {
     cursor: pointer;
     transition: background-color 0.2s ease, color 0.2s ease;
 }
+
 .report-submit:hover {
     background-color: var(--button-hover);
     color: var(--text-color);
