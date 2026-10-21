@@ -34,6 +34,19 @@ const prevButton = document.getElementById("reportPrevPage");
 const nextButton = document.getElementById("reportNextPage");
 
 
+const editReportDialog = document.getElementById("editReportDialog");
+const editReportForm = document.getElementById("editReportForm");
+
+const editReportId = document.getElementById("editReportId");
+const editKomponen = document.getElementById("editKomponen");
+const editDetail = document.getElementById("editDetail");
+const editStatus = document.getElementById("editStatus");
+
+const cancelEditReport = document.getElementById("cancelEditReport");
+const saveEditReport = document.getElementById("saveEditReport");
+
+
+
 // ========================================
 // FORMAT TANGGAL
 // ========================================
@@ -239,7 +252,7 @@ function renderTable() {
         const row = document.createElement("tr");
         const cell = document.createElement("td");
 
-        cell.colSpan = 8;
+        cell.colSpan = 9;
         cell.textContent =
             "Tidak ada laporan untuk filter yang dipilih.";
 
@@ -265,6 +278,27 @@ function renderTable() {
                 cell.textContent = value || "-";
                 row.appendChild(cell);
             });
+            const actionCell = document.createElement("td");
+            const editButton = document.createElement("button");
+
+            editButton.type = "button";
+            editButton.textContent = "Edit";
+            editButton.className = "edit-report-btn";
+
+            // Simpan ID laporan pada tombol untuk digunakan nanti.
+            editButton.dataset.reportId = report.reportId || "";
+
+            editButton.addEventListener("click", function () {
+                if (!report.reportId) {
+                    alert("Report ID tidak ditemukan. Muat ulang halaman.");
+                    return;
+                }
+
+                openEditReport(report);
+            });
+
+            actionCell.appendChild(editButton);
+            row.appendChild(actionCell);
 
             tableBody.appendChild(row);
         });
@@ -282,6 +316,16 @@ function renderTable() {
         totalPages === 0 || currentPage >= totalPages;
 
     updateSortIndicators();
+}
+
+
+function openEditReport(report) {
+    editReportId.value = report.reportId || "";
+    editKomponen.value = report.komponen || "";
+    editDetail.value = report.detail || "";
+    editStatus.value = report.status || "";
+
+    editReportDialog.showModal();
 }
 
 
@@ -356,9 +400,95 @@ window.handleReportData = function (result) {
         return parseReportDate(report.tanggal) !== null;
     });
 
+    console.log("Data laporan pertama:", allReports[0]);
+    console.log("Report ID pertama:", allReports[0]?.reportId);
+
     initializeFilters();
     applyFilters();
 };
+
+cancelEditReport.addEventListener("click", function () {
+    editReportDialog.close();
+});
+
+
+editReportForm.addEventListener("submit", async function (event) {
+    event.preventDefault();
+
+    const payload = {
+        action: "updateReport",
+        reportId: editReportId.value,
+        komponen: editKomponen.value,
+        detail: editDetail.value.trim(),
+        status: editStatus.value
+    };
+
+    saveEditReport.disabled = true;
+    saveEditReport.textContent = "Menyimpan...";
+
+    try {
+        const response = await fetch(REPORT_DATA_URL, {
+            method: "POST",
+            body: new URLSearchParams({
+                payload: JSON.stringify(payload)
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error("Server tidak dapat memproses permintaan.");
+        }
+
+        const result = await response.json();
+
+        if (!result.success) {
+            throw new Error(
+                result.message || "Gagal menyimpan perubahan."
+            );
+        }
+
+        // Perbarui data lokal tanpa mengambil ulang seluruh laporan.
+        allReports = allReports.map(function (report) {
+            if (report.reportId !== payload.reportId) {
+                return report;
+            }
+
+            return {
+                ...report,
+                komponen: payload.komponen,
+                detail: payload.detail,
+                status: payload.status
+            };
+        });
+
+        // Tutup popup dan perbarui tabel sesuai filter aktif.
+        editReportDialog.close();
+        applyFilters();
+
+        if (typeof Swal !== "undefined") {
+            await Swal.fire({
+                icon: "success",
+                title: "Berhasil!",
+                text: "Laporan berhasil diperbarui."
+            });
+        } else {
+            alert("Laporan berhasil diperbarui.");
+        }
+    } catch (error) {
+        if (typeof Swal !== "undefined") {
+            await Swal.fire({
+                icon: "error",
+                title: "Gagal menyimpan",
+                text: error.message || "Terjadi kesalahan saat menyimpan."
+            });
+        } else {
+            alert(error.message || "Terjadi kesalahan saat menyimpan.");
+        }
+    } finally {
+        saveEditReport.disabled = false;
+        saveEditReport.textContent = "Simpan Perubahan";
+    }
+});
+
 
 
 // ========================================
