@@ -329,6 +329,132 @@ function openEditReport(report) {
 }
 
 
+
+
+function sendUpdateAndVerify(payload) {
+    return new Promise(function (resolve, reject) {
+        const frameName = "updateReportFrame";
+        const iframe = document.createElement("iframe");
+        const form = document.createElement("form");
+        const input = document.createElement("textarea");
+
+        iframe.name = frameName;
+        iframe.hidden = true;
+
+        form.method = "POST";
+        form.action = REPORT_DATA_URL;
+        form.target = frameName;
+        form.hidden = true;
+
+        input.name = "payload";
+        input.value = JSON.stringify(payload);
+        form.appendChild(input);
+
+        let finished = false;
+        let timeoutId;
+
+        function cleanup() {
+            clearTimeout(timeoutId);
+            iframe.remove();
+            form.remove();
+        }
+
+        function fail(message) {
+            if (finished) return;
+            finished = true;
+            cleanup();
+            reject(new Error(message));
+        }
+
+        function verifyUpdate() {
+            const originalHandler = window.handleReportData;
+            const verifyScript = document.createElement("script");
+            let verified = false;
+
+            function restoreHandler() {
+                window.handleReportData = originalHandler;
+                verifyScript.remove();
+            }
+
+            window.handleReportData = function (result) {
+                if (originalHandler) {
+                    originalHandler(result);
+                }
+
+                if (!result || !result.success ||
+                    !Array.isArray(result.reports)) {
+                    restoreHandler();
+                    fail("Gagal memverifikasi data dari server.");
+                    return;
+                }
+
+                const updatedReport = result.reports.find(function (report) {
+                    return report.reportId === payload.reportId;
+                });
+
+                if (
+                    updatedReport &&
+                    updatedReport.komponen === payload.komponen &&
+                    updatedReport.detail === payload.detail &&
+                    updatedReport.status === payload.status
+                ) {
+                    verified = true;
+                    restoreHandler();
+
+                    if (!finished) {
+                        finished = true;
+                        cleanup();
+                        resolve(result);
+                    }
+                } else {
+                    restoreHandler();
+                    fail(
+                        "Perubahan belum terverifikasi. " +
+                        "Periksa data di spreadsheet."
+                    );
+                }
+            };
+
+            verifyScript.src =
+                REPORT_DATA_URL +
+                "?action=readReports&_t=" + Date.now();
+
+            verifyScript.onerror = function () {
+                restoreHandler();
+                fail("Gagal membaca ulang laporan untuk verifikasi.");
+            };
+
+            document.body.appendChild(verifyScript);
+        }
+
+        iframe.addEventListener("load", function onInitialLoad() {
+            iframe.removeEventListener("load", onInitialLoad);
+
+            iframe.addEventListener("load", function () {
+                if (!finished) {
+                    verifyUpdate();
+                }
+            }, { once: true });
+
+            form.submit();
+        });
+
+        timeoutId = setTimeout(function () {
+            fail(
+                "Waktu tunggu habis. Periksa spreadsheet sebelum mencoba lagi."
+            );
+        }, 30000);
+
+        document.body.appendChild(iframe);
+        document.body.appendChild(form);
+    });
+}
+
+
+
+
+
+
 // ========================================
 // EVENT FILTER, SORTING, DAN PAGINATION
 // ========================================
@@ -412,6 +538,7 @@ cancelEditReport.addEventListener("click", function () {
 });
 
 
+
 editReportForm.addEventListener("submit", async function (event) {
     event.preventDefault();
 
@@ -427,40 +554,8 @@ editReportForm.addEventListener("submit", async function (event) {
     saveEditReport.textContent = "Menyimpan...";
 
     try {
-        const response = await fetch(REPORT_DATA_URL, {
-            method: "POST",
-            body: new URLSearchParams({
-                payload: JSON.stringify(payload)
-            })
-        });
+        await sendUpdateAndVerify(payload);
 
-        if (!response.ok) {
-            throw new Error("Server tidak dapat memproses permintaan.");
-        }
-
-        const result = await response.json();
-
-        if (!result.success) {
-            throw new Error(
-                result.message || "Gagal menyimpan perubahan."
-            );
-        }
-
-        // Perbarui data lokal tanpa mengambil ulang seluruh laporan.
-        allReports = allReports.map(function (report) {
-            if (report.reportId !== payload.reportId) {
-                return report;
-            }
-
-            return {
-                ...report,
-                komponen: payload.komponen,
-                detail: payload.detail,
-                status: payload.status
-            };
-        });
-
-        // Tutup popup dan perbarui tabel sesuai filter aktif.
         editReportDialog.close();
         applyFilters();
 
@@ -468,20 +563,21 @@ editReportForm.addEventListener("submit", async function (event) {
             await Swal.fire({
                 icon: "success",
                 title: "Berhasil!",
-                text: "Laporan berhasil diperbarui."
+                text: "Perubahan laporan sudah terverifikasi."
             });
         } else {
-            alert("Laporan berhasil diperbarui.");
+            alert("Perubahan laporan sudah terverifikasi.");
         }
     } catch (error) {
         if (typeof Swal !== "undefined") {
             await Swal.fire({
                 icon: "error",
                 title: "Gagal menyimpan",
-                text: error.message || "Terjadi kesalahan saat menyimpan."
+                text: error.message ||
+                    "Periksa kembali koneksi dan data laporan."
             });
         } else {
-            alert(error.message || "Terjadi kesalahan saat menyimpan.");
+            alert(error.message || "Gagal menyimpan perubahan.");
         }
     } finally {
         saveEditReport.disabled = false;
