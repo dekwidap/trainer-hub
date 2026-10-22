@@ -1790,3 +1790,337 @@ body {
     color: var(--muted-color);
     font-size: 14px;
 }
+
+/* ========================================
+   TRAINER CALENDAR
+   ======================================== */
+
+.calendar-page {
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 28px 20px 40px;
+    color: var(--text-color);
+}
+
+.calendar-page-header {
+    margin-bottom: 22px;
+}
+
+.calendar-page-header h2 {
+    margin: 0 0 7px;
+    color: var(--text-color);
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+
+.calendar-page-header p {
+    margin: 0;
+    color: var(--muted-color);
+    font-size: 0.95rem;
+}
+
+/* Calendar Card */
+
+.calendar-card {
+    width: 100%;
+    overflow: hidden;
+    background: var(--header-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+}
+
+/* Toolbar */
+
+.calendar-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 16px 18px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.calendar-toolbar-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.calendar-nav-btn,
+.calendar-today-btn {
+    height: 36px;
+    border: 1px solid var(--border-color);
+    background: var(--header-bg);
+    color: var(--text-color);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.calendar-nav-btn {
+    width: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.calendar-nav-btn:hover,
+.calendar-today-btn:hover {
+    background: var(--hover-bg);
+}
+
+.calendar-nav-btn svg {
+    width: 17px;
+    height: 17px;
+}
+
+.calendar-today-btn {
+    padding: 0 14px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.calendar-month-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text-color);
+}
+
+/* Calendar Wrapper */
+
+.calendar-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+/* Weekdays */
+
+.calendar-weekdays {
+    min-width: 900px;
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+
+    border-bottom: 1px solid var(--border-color);
+}
+
+.calendar-weekdays>div {
+    padding: 12px 10px;
+
+    text-align: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--muted-color);
+
+    border-right: 1px solid var(--border-color);
+}
+
+.calendar-weekdays>div:last-child {
+    border-right: none;
+}
+
+/* Calendar Grid */
+
+.calendar-grid {
+    min-width: 900px;
+
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+
+    grid-auto-rows: minmax(125px, auto);
+}
+
+/* Day Cell */
+
+.calendar-day {
+    position: relative;
+    min-height: 125px;
+    padding: 8px;
+
+    border-right: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+
+    background: var(--header-bg);
+
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.calendar-day:hover {
+    background: var(--hover-bg);
+}
+
+.calendar-day:nth-child(7n) {
+    border-right: none;
+}
+
+/* Empty cells */
+
+.calendar-day.is-empty {
+    cursor: default;
+    background: var(--background-color);
+}
+
+.calendar-day.is-empty:hover {
+    background: var(--background-color);
+}
+
+/* Date number */
+
+.calendar-day-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 27px;
+    height: 27px;
+
+    margin-bottom: 6px;
+
+    border-radius: 50%;
+
+    color: var(--text-color);
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.calendar-day.is-today .calendar-day-number {
+    background: var(--primary-color);
+    color: #fff;
+}
+
+/* Shift List */
+
+.calendar-shifts {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+/* Shift Item */
+
+.calendar-shift {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    width: 100%;
+    padding: 4px 6px;
+
+    border-radius: 5px;
+
+    font-size: 11px;
+    line-height: 1.25;
+
+    overflow: hidden;
+}
+
+.calendar-shift-code {
+    flex: 0 0 auto;
+
+    min-width: 20px;
+    height: 20px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 4px;
+
+    font-size: 10px;
+    font-weight: 800;
+}
+
+.calendar-shift-name {
+    min-width: 0;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    font-weight: 600;
+}
+
+/* Shift Colors */
+
+.calendar-shift-p {
+    background: rgba(59, 130, 246, 0.12);
+    color: #2563eb;
+}
+
+.calendar-shift-p .calendar-shift-code {
+    background: #2563eb;
+    color: #fff;
+}
+
+.calendar-shift-m {
+    background: rgba(139, 92, 246, 0.12);
+    color: #7c3aed;
+}
+
+.calendar-shift-m .calendar-shift-code {
+    background: #7c3aed;
+    color: #fff;
+}
+
+.calendar-shift-l {
+    background: rgba(16, 185, 129, 0.12);
+    color: #059669;
+}
+
+.calendar-shift-l .calendar-shift-code {
+    background: #059669;
+    color: #fff;
+}
+
+.calendar-shift-c {
+    background: rgba(245, 158, 11, 0.14);
+    color: #d97706;
+}
+
+.calendar-shift-c .calendar-shift-code {
+    background: #d97706;
+    color: #fff;
+}
+
+.calendar-shift-o {
+    background: rgba(107, 114, 128, 0.12);
+    color: #6b7280;
+}
+
+.calendar-shift-o .calendar-shift-code {
+    background: #6b7280;
+    color: #fff;
+}
+
+/* More indicator */
+
+.calendar-more {
+    margin-top: 2px;
+
+    color: var(--muted-color);
+    font-size: 10px;
+    font-weight: 600;
+}
+
+/* Mobile */
+
+@media (max-width: 768px) {
+
+    .calendar-page {
+        padding: 20px 12px 30px;
+    }
+
+    .calendar-toolbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .calendar-month-title {
+        order: -1;
+    }
+
+    .calendar-day {
+        min-height: 110px;
+    }
+}

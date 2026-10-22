@@ -144,33 +144,62 @@
 
 
     <!-- MAIN CONTENT -->
-    <main class="main-content">
+    <main class="main-content calendar-page">
 
-        <section class="calendar-page">
-
-            <div class="calendar-page-header">
-
+        <section class="calendar-page-header">
+            <div>
                 <h2>Jadwal Trainer</h2>
+                <p>Lihat jadwal kerja trainer dan perubahan jadwal dalam tampilan kalender.</p>
+            </div>
+        </section>
 
-                <p>
-                    Kalender jadwal kerja trainer dan penyesuaian jadwal.
-                </p>
+        <section class="calendar-card">
+
+            <!-- Calendar Toolbar -->
+            <div class="calendar-toolbar">
+
+                <div class="calendar-toolbar-left">
+                    <button type="button" class="calendar-nav-btn" id="prevMonth" aria-label="Bulan sebelumnya">
+                        <i data-lucide="chevron-left"></i>
+                    </button>
+
+                    <button type="button" class="calendar-nav-btn" id="nextMonth" aria-label="Bulan berikutnya">
+                        <i data-lucide="chevron-right"></i>
+                    </button>
+
+                    <button type="button" class="calendar-today-btn" id="todayBtn">
+                        Today
+                    </button>
+                </div>
+
+                <div class="calendar-month-title" id="calendarMonthTitle">
+                    October 2026
+                </div>
 
             </div>
 
-            <!-- Kalender akan kita bangun di sini -->
-            <div class="calendar-container">
+            <!-- Calendar -->
+            <div class="calendar-wrapper">
 
-                <p class="calendar-placeholder">
-                    Calendar akan dibuat pada tahap berikutnya.
-                </p>
+                <div class="calendar-weekdays">
+                    <div>Sen</div>
+                    <div>Sel</div>
+                    <div>Rab</div>
+                    <div>Kam</div>
+                    <div>Jum</div>
+                    <div>Sab</div>
+                    <div>Min</div>
+                </div>
+
+                <div class="calendar-grid" id="calendarGrid">
+                    <!-- Diisi oleh JavaScript -->
+                </div>
 
             </div>
 
         </section>
 
     </main>
-
 
     <!-- FOOTER -->
     <footer class="site-footer">
@@ -198,6 +227,394 @@
 
     <script>
         lucide.createIcons();
+    </script>
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const calendarGrid = document.getElementById("calendarGrid");
+            const calendarMonthTitle = document.getElementById("calendarMonthTitle");
+
+            const prevMonthBtn = document.getElementById("prevMonth");
+            const nextMonthBtn = document.getElementById("nextMonth");
+            const todayBtn = document.getElementById("todayBtn");
+
+            let currentDate = new Date();
+
+            /*
+             * ========================================
+             * DUMMY DATA
+             * Nanti bagian ini akan diganti dengan
+             * data dari Spreadsheet B.
+             * ========================================
+             */
+
+            const dummySchedule = {
+                "2026-10-01": [
+                    { trainer: "Andi", shift: "P" },
+                    { trainer: "Budi", shift: "M" }
+                ],
+
+                "2026-10-02": [
+                    { trainer: "Citra", shift: "P" },
+                    { trainer: "Deni", shift: "L" }
+                ],
+
+                "2026-10-03": [
+                    { trainer: "Andi", shift: "P" },
+                    { trainer: "Citra", shift: "M" },
+                    { trainer: "Budi", shift: "L" }
+                ],
+
+                "2026-10-04": [
+                    { trainer: "Deni", shift: "C" }
+                ],
+
+                "2026-10-05": [
+                    { trainer: "Andi", shift: "M" },
+                    { trainer: "Budi", shift: "P" },
+                    { trainer: "Citra", shift: "O" }
+                ],
+
+                "2026-10-06": [
+                    { trainer: "Deni", shift: "P" },
+                    { trainer: "Andi", shift: "P" }
+                ],
+
+                "2026-10-07": [
+                    { trainer: "Budi", shift: "M" },
+                    { trainer: "Citra", shift: "L" }
+                ],
+
+                "2026-10-08": [
+                    { trainer: "Andi", shift: "P" },
+                    { trainer: "Deni", shift: "M" }
+                ],
+
+                "2026-10-09": [
+                    { trainer: "Budi", shift: "P" },
+                    { trainer: "Citra", shift: "C" },
+                    { trainer: "Deni", shift: "L" }
+                ],
+
+                "2026-10-10": [
+                    { trainer: "Andi", shift: "O" }
+                ],
+
+                "2026-10-11": [
+                    { trainer: "Budi", shift: "P" },
+                    { trainer: "Citra", shift: "M" }
+                ],
+
+                "2026-10-12": [
+                    { trainer: "Andi", shift: "P" },
+                    { trainer: "Budi", shift: "M" },
+                    { trainer: "Citra", shift: "L" },
+                    { trainer: "Deni", shift: "P" }
+                ]
+            };
+
+
+            /*
+             * ========================================
+             * FORMAT DATE
+             * ========================================
+             */
+
+            function formatDateKey(year, month, day) {
+
+                const monthString = String(month + 1).padStart(2, "0");
+                const dayString = String(day).padStart(2, "0");
+
+                return `${year}-${monthString}-${dayString}`;
+            }
+
+
+            /*
+             * ========================================
+             * RENDER CALENDAR
+             * ========================================
+             */
+
+            function renderCalendar() {
+
+                const year = currentDate.getFullYear();
+                const month = currentDate.getMonth();
+
+                const monthName = currentDate.toLocaleDateString("id-ID", {
+                    month: "long",
+                    year: "numeric"
+                });
+
+                calendarMonthTitle.textContent =
+                    monthName.charAt(0).toUpperCase() + monthName.slice(1);
+
+
+                calendarGrid.innerHTML = "";
+
+
+                /*
+                 * Hari pertama bulan
+                 */
+
+                const firstDay = new Date(year, month, 1);
+
+                /*
+                 * JS:
+                 * Minggu = 0
+                 * Senin  = 1
+                 *
+                 * Kita ingin:
+                 * Senin = 0
+                 */
+
+                let startingDay = firstDay.getDay();
+
+                startingDay = startingDay === 0
+                    ? 6
+                    : startingDay - 1;
+
+
+                /*
+                 * Jumlah hari dalam bulan
+                 */
+
+                const daysInMonth = new Date(
+                    year,
+                    month + 1,
+                    0
+                ).getDate();
+
+
+                /*
+                 * Cell kosong sebelum tanggal 1
+                 */
+
+                for (let i = 0; i < startingDay; i++) {
+
+                    const emptyCell = document.createElement("div");
+
+                    emptyCell.className = "calendar-day is-empty";
+
+                    calendarGrid.appendChild(emptyCell);
+                }
+
+
+                /*
+                 * Buat tanggal
+                 */
+
+                for (let day = 1; day <= daysInMonth; day++) {
+
+                    const dayCell = document.createElement("div");
+
+                    dayCell.className = "calendar-day";
+
+
+                    const dateKey = formatDateKey(
+                        year,
+                        month,
+                        day
+                    );
+
+
+                    /*
+                     * Cek apakah hari ini
+                     */
+
+                    const today = new Date();
+
+                    const isToday =
+                        day === today.getDate() &&
+                        month === today.getMonth() &&
+                        year === today.getFullYear();
+
+
+                    if (isToday) {
+                        dayCell.classList.add("is-today");
+                    }
+
+
+                    /*
+                     * Nomor tanggal
+                     */
+
+                    const dayNumber = document.createElement("div");
+
+                    dayNumber.className = "calendar-day-number";
+
+                    dayNumber.textContent = day;
+
+
+                    dayCell.appendChild(dayNumber);
+
+
+                    /*
+                     * Daftar shift
+                     */
+
+                    const shiftContainer = document.createElement("div");
+
+                    shiftContainer.className = "calendar-shifts";
+
+
+                    const schedules = dummySchedule[dateKey] || [];
+
+
+                    schedules.slice(0, 4).forEach(schedule => {
+
+                        const shiftItem = document.createElement("div");
+
+                        shiftItem.className =
+                            "calendar-shift calendar-shift-" +
+                            schedule.shift.toLowerCase();
+
+
+                        const shiftCode = document.createElement("span");
+
+                        shiftCode.className = "calendar-shift-code";
+
+                        shiftCode.textContent = schedule.shift;
+
+
+                        const trainerName = document.createElement("span");
+
+                        trainerName.className = "calendar-shift-name";
+
+                        trainerName.textContent = schedule.trainer;
+
+
+                        shiftItem.appendChild(shiftCode);
+                        shiftItem.appendChild(trainerName);
+
+
+                        shiftContainer.appendChild(shiftItem);
+                    });
+
+
+                    /*
+                     * Jika lebih dari 4 trainer
+                     */
+
+                    if (schedules.length > 4) {
+
+                        const more = document.createElement("div");
+
+                        more.className = "calendar-more";
+
+                        more.textContent =
+                            `+${schedules.length - 4} lainnya`;
+
+                        shiftContainer.appendChild(more);
+                    }
+
+
+                    dayCell.appendChild(shiftContainer);
+
+
+                    /*
+                     * Klik tanggal
+                     */
+
+                    dayCell.addEventListener("click", function () {
+
+                        console.log(
+                            "Tanggal dipilih:",
+                            dateKey
+                        );
+
+                    });
+
+
+                    calendarGrid.appendChild(dayCell);
+                }
+
+
+                /*
+                 * Isi cell kosong setelah tanggal terakhir
+                 */
+
+                const totalCells =
+                    startingDay + daysInMonth;
+
+                const remainingCells =
+                    (7 - (totalCells % 7)) % 7;
+
+
+                for (let i = 0; i < remainingCells; i++) {
+
+                    const emptyCell = document.createElement("div");
+
+                    emptyCell.className = "calendar-day is-empty";
+
+                    calendarGrid.appendChild(emptyCell);
+                }
+
+
+                /*
+                 * Refresh icon Lucide
+                 */
+
+                if (window.lucide) {
+                    lucide.createIcons();
+                }
+            }
+
+
+            /*
+             * ========================================
+             * BULAN SEBELUMNYA
+             * ========================================
+             */
+
+            prevMonthBtn.addEventListener("click", function () {
+
+                currentDate.setMonth(
+                    currentDate.getMonth() - 1
+                );
+
+                renderCalendar();
+            });
+
+
+            /*
+             * ========================================
+             * BULAN BERIKUTNYA
+             * ========================================
+             */
+
+            nextMonthBtn.addEventListener("click", function () {
+
+                currentDate.setMonth(
+                    currentDate.getMonth() + 1
+                );
+
+                renderCalendar();
+            });
+
+
+            /*
+             * ========================================
+             * TODAY
+             * ========================================
+             */
+
+            todayBtn.addEventListener("click", function () {
+
+                currentDate = new Date();
+
+                renderCalendar();
+            });
+
+
+            /*
+             * Render pertama
+             */
+
+            renderCalendar();
+
+        });
     </script>
 
 </body>
