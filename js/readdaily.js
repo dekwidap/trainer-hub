@@ -13,10 +13,6 @@ let allReports = [];
 let filteredReports = [];
 let currentPage = 1;
 
-// Urutan awal: tanggal paling lama ke paling baru.
-let sortKey = "tanggal";
-let sortDirection = "asc";
-
 
 // ========================================
 // ELEMEN HALAMAN
@@ -171,55 +167,11 @@ function applyFilters() {
 
 
 // ========================================
-// PENGURUTAN KOLOM
-// ========================================
-
-function compareReports(a, b) {
-    let comparison = 0;
-
-    if (sortKey === "tanggal") {
-        const dateA = parseReportDate(a.tanggal);
-        const dateB = parseReportDate(b.tanggal);
-
-        comparison = dateA - dateB;
-    } else {
-        const valueA = String(a[sortKey] || "");
-        const valueB = String(b[sortKey] || "");
-
-        comparison = valueA.localeCompare(
-            valueB,
-            "id",
-            { sensitivity: "base", numeric: true }
-        );
-    }
-
-    return sortDirection === "asc"
-        ? comparison
-        : -comparison;
-}
-
-function updateSortIndicators() {
-    document.querySelectorAll("[data-sort]").forEach(function (button) {
-        const indicator = button.querySelector("span");
-
-        if (!indicator) return;
-
-        if (button.dataset.sort === sortKey) {
-            indicator.textContent =
-                sortDirection === "asc" ? "↑" : "↓";
-        } else {
-            indicator.textContent = "";
-        }
-    });
-}
-
-
-// ========================================
 // TAMPILKAN TABEL DAN PAGINATION
 // ========================================
 
 function renderTable() {
-    const sortedReports = [...filteredReports].sort(compareReports);
+    const sortedReports = [...filteredReports];
 
     const totalReports = sortedReports.length;
     const totalPages = Math.ceil(totalReports / REPORTS_PER_PAGE);
@@ -282,8 +234,6 @@ function renderTable() {
     prevButton.disabled = currentPage <= 1;
     nextButton.disabled =
         totalPages === 0 || currentPage >= totalPages;
-
-    updateSortIndicators();
 }
 
 
@@ -296,22 +246,6 @@ monthFilter.addEventListener("change", applyFilters);
 yearFilter.addEventListener("change", applyFilters);
 trainerFilter.addEventListener("change", applyFilters);
 
-document.querySelectorAll("[data-sort]").forEach(function (button) {
-    button.addEventListener("click", function () {
-        const newKey = button.dataset.sort;
-
-        if (sortKey === newKey) {
-            sortDirection =
-                sortDirection === "asc" ? "desc" : "asc";
-        } else {
-            sortKey = newKey;
-            sortDirection = "asc";
-        }
-
-        currentPage = 1;
-        renderTable();
-    });
-});
 
 prevButton.addEventListener("click", function () {
     if (currentPage > 1) {
