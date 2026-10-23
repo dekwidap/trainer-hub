@@ -183,3 +183,19 @@ document.querySelectorAll(".nav-dropdown").forEach(function (dropdown) {
         }
     });
 });
+
+
+const categoryFilter = document.getElementById("categoryFilter");
+const linkSections = document.querySelectorAll(".link-section");
+
+categoryFilter.addEventListener("change", function () {
+    const selectedCategory = this.value;
+
+    linkSections.forEach(function (section) {
+        const category = section.dataset.category;
+
+        section.hidden =
+            selectedCategory !== "all" &&
+            category !== selectedCategory;
+    });
+});

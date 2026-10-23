@@ -132,14 +132,31 @@
     </header>
 
 
+
     <!-- BODY  -->
     <main class="main-content">
 
+
+
+
         <div class="link-sections">
+
+
+            <div class="link-filter">
+                <label for="categoryFilter">Kategori</label>
+
+                <select id="categoryFilter">
+                    <option value="all">Semua Kategori</option>
+                    <option value="guide">Guide All Produk PMS Pro</option>
+                    <option value="sop">Standar Operasional Prosedur (SOP)</option>
+                    <option value="tools">Tools & Resources</option>
+                    <option value="report">Report Internal</option>
+                </select>
+            </div>
 
             <!-- Kategori 1 -->
 
-            <section class="link-section">
+            <section class="link-section" data-category="guide">
 
                 <div class="section-heading">
                     <h2>Guide All Produk PMS Pro</h2>
@@ -222,9 +239,79 @@
 
             </section>
 
-            <!-- Kategori 2 -->
+            <section class="link-section" data-category="sop">
 
-            <section class="link-section">
+                <div class="section-heading">
+                    <h2>Standar Operasional Prosedur (SOP)</h2>
+                </div>
+
+                <div class="card-container">
+
+                    <a href="https://docs.google.com/document/d/1Vfuuzlyr77oJvJGxXnPT2hEgg6UYqtC9WJ7usHJJQaE/edit?usp=sharing"
+                        class="link-card" target="_blank" rel="noopener noreferrer">
+                        <div class="card-icon">
+                            <i data-lucide="refresh-cw"></i>
+                        </div>
+
+                        <div class="card-content">
+                            <h3>SOP Term and Condition - Refresh Training</h3>
+                            <p>Syarat dan Ketentuan Pelatihan Refresh dan Template Chat</p>
+                        </div>
+
+                        <i data-lucide="arrow-up-right"></i>
+                    </a>
+
+                    <a href="https://drive.google.com/file/d/1RbkHSltDt_K12mn0B73m0AK83DOPV9kO/view?usp=sharing"
+                        class="link-card" target="_blank" rel="noopener noreferrer">
+                        <div class="card-icon">
+                            <i data-lucide="square-pen"></i>
+                        </div>
+
+                        <div class="card-content">
+                            <h3>SOP Perubahan Data Request Property</h3>
+                            <p>Syarat dan Ketentuan Perubahan</p>
+                        </div>
+
+                        <i data-lucide="arrow-up-right"></i>
+                    </a>
+
+                    <a href="https://drive.google.com/file/d/1R7jbPhTz1oNxhcE5NjQ6F8QSa31QSS5c/view?usp=sharing"
+                        class="link-card" target="_blank" rel="noopener noreferrer">
+                        <div class="card-icon">
+                            <i data-lucide="square-text"></i>
+                        </div>
+
+                        <div class="card-content">
+                            <h3>SOP Pembuatan Surat Tugas</h3>
+                            <p>Panduan Pembuatan</p>
+                        </div>
+
+                        <i data-lucide="arrow-up-right"></i>
+                    </a>
+
+                    <a href="https://drive.google.com/file/d/1b5GdSztIAXO_TrD3UYdenvCYe4SuqOjd/view?usp=sharing"
+                        class="link-card" target="_blank" rel="noopener noreferrer">
+                        <div class="card-icon">
+                            <i data-lucide="mail-open"></i>
+                        </div>
+
+                        <div class="card-content">
+                            <h3>SOP Email</h3>
+                            <p>Template Chat Membalas atau Mengirim Email</p>
+                        </div>
+
+                        <i data-lucide="arrow-up-right"></i>
+                    </a>
+
+
+
+                </div>
+
+            </section>
+
+            <!-- Kategori 3 -->
+
+            <section class="link-section" data-category="tools">
 
                 <div class="section-heading">
                     <h2>Tools & Resources</h2>
@@ -296,7 +383,7 @@
 
                         <div class="card-content">
                             <h3>Training dan Implementasi Files</h3>
-                            <p>File Inject Migrasi, Project R`eport, Checklist, Comment Card, dan Absensi</p>
+                            <p>File Inject Migrasi, Project Report, Checklist, Comment Card, dan Absensi</p>
                         </div>
 
                         <i data-lucide="arrow-up-right"></i>
@@ -309,9 +396,9 @@
             </section>
 
 
-            <!-- Kategori 3 -->
+            <!-- Kategori 4 -->
 
-            <section class="link-section">
+            <section class="link-section" data-category="report">
 
                 <div class="section-heading">
                     <h2>Report Internal</h2>
