@@ -34,17 +34,6 @@ const prevButton = document.getElementById("reportPrevPage");
 const nextButton = document.getElementById("reportNextPage");
 
 
-const editReportDialog = document.getElementById("editReportDialog");
-const editReportForm = document.getElementById("editReportForm");
-
-const editReportId = document.getElementById("editReportId");
-const editKomponen = document.getElementById("editKomponen");
-const editDetail = document.getElementById("editDetail");
-const editStatus = document.getElementById("editStatus");
-
-const cancelEditReport = document.getElementById("cancelEditReport");
-const saveEditReport = document.getElementById("saveEditReport");
-
 
 
 // ========================================
@@ -252,7 +241,7 @@ function renderTable() {
         const row = document.createElement("tr");
         const cell = document.createElement("td");
 
-        cell.colSpan = 9;
+        cell.colSpan = 8;
         cell.textContent =
             "Tidak ada laporan untuk filter yang dipilih.";
 
@@ -278,27 +267,6 @@ function renderTable() {
                 cell.textContent = value || "-";
                 row.appendChild(cell);
             });
-            const actionCell = document.createElement("td");
-            const editButton = document.createElement("button");
-
-            editButton.type = "button";
-            editButton.textContent = "Edit";
-            editButton.className = "edit-report-btn";
-
-            // Simpan ID laporan pada tombol untuk digunakan nanti.
-            editButton.dataset.reportId = report.reportId || "";
-
-            editButton.addEventListener("click", function () {
-                if (!report.reportId) {
-                    alert("Report ID tidak ditemukan. Muat ulang halaman.");
-                    return;
-                }
-
-                openEditReport(report);
-            });
-
-            actionCell.appendChild(editButton);
-            row.appendChild(actionCell);
 
             tableBody.appendChild(row);
         });
@@ -317,141 +285,6 @@ function renderTable() {
 
     updateSortIndicators();
 }
-
-
-function openEditReport(report) {
-    editReportId.value = report.reportId || "";
-    editKomponen.value = report.komponen || "";
-    editDetail.value = report.detail || "";
-    editStatus.value = report.status || "";
-
-    editReportDialog.showModal();
-}
-
-
-
-
-function sendUpdateAndVerify(payload) {
-    return new Promise(function (resolve, reject) {
-        const frameName = "updateReportFrame";
-        const iframe = document.createElement("iframe");
-        const form = document.createElement("form");
-        const input = document.createElement("textarea");
-
-        iframe.name = frameName;
-        iframe.hidden = true;
-
-        form.method = "POST";
-        form.action = REPORT_DATA_URL;
-        form.target = frameName;
-        form.hidden = true;
-
-        input.name = "payload";
-        input.value = JSON.stringify(payload);
-        form.appendChild(input);
-
-        let finished = false;
-        let timeoutId;
-
-        function cleanup() {
-            clearTimeout(timeoutId);
-            iframe.remove();
-            form.remove();
-        }
-
-        function fail(message) {
-            if (finished) return;
-            finished = true;
-            cleanup();
-            reject(new Error(message));
-        }
-
-        function verifyUpdate() {
-            const originalHandler = window.handleReportData;
-            const verifyScript = document.createElement("script");
-            let verified = false;
-
-            function restoreHandler() {
-                window.handleReportData = originalHandler;
-                verifyScript.remove();
-            }
-
-            window.handleReportData = function (result) {
-                if (originalHandler) {
-                    originalHandler(result);
-                }
-
-                if (!result || !result.success ||
-                    !Array.isArray(result.reports)) {
-                    restoreHandler();
-                    fail("Gagal memverifikasi data dari server.");
-                    return;
-                }
-
-                const updatedReport = result.reports.find(function (report) {
-                    return report.reportId === payload.reportId;
-                });
-
-                if (
-                    updatedReport &&
-                    updatedReport.komponen === payload.komponen &&
-                    updatedReport.detail === payload.detail &&
-                    updatedReport.status === payload.status
-                ) {
-                    verified = true;
-                    restoreHandler();
-
-                    if (!finished) {
-                        finished = true;
-                        cleanup();
-                        resolve(result);
-                    }
-                } else {
-                    restoreHandler();
-                    fail(
-                        "Perubahan belum terverifikasi. " +
-                        "Periksa data di spreadsheet."
-                    );
-                }
-            };
-
-            verifyScript.src =
-                REPORT_DATA_URL +
-                "?action=readReports&_t=" + Date.now();
-
-            verifyScript.onerror = function () {
-                restoreHandler();
-                fail("Gagal membaca ulang laporan untuk verifikasi.");
-            };
-
-            document.body.appendChild(verifyScript);
-        }
-
-        iframe.addEventListener("load", function onInitialLoad() {
-            iframe.removeEventListener("load", onInitialLoad);
-
-            iframe.addEventListener("load", function () {
-                if (!finished) {
-                    verifyUpdate();
-                }
-            }, { once: true });
-
-            form.submit();
-        });
-
-        timeoutId = setTimeout(function () {
-            fail(
-                "Waktu tunggu habis. Periksa spreadsheet sebelum mencoba lagi."
-            );
-        }, 30000);
-
-        document.body.appendChild(iframe);
-        document.body.appendChild(form);
-    });
-}
-
-
-
 
 
 
@@ -532,60 +365,6 @@ window.handleReportData = function (result) {
     initializeFilters();
     applyFilters();
 };
-
-cancelEditReport.addEventListener("click", function () {
-    editReportDialog.close();
-});
-
-
-
-editReportForm.addEventListener("submit", async function (event) {
-    event.preventDefault();
-
-    const payload = {
-        action: "updateReport",
-        reportId: editReportId.value,
-        komponen: editKomponen.value,
-        detail: editDetail.value.trim(),
-        status: editStatus.value
-    };
-
-    saveEditReport.disabled = true;
-    saveEditReport.textContent = "Menyimpan...";
-
-    try {
-        await sendUpdateAndVerify(payload);
-
-        editReportDialog.close();
-        applyFilters();
-
-        if (typeof Swal !== "undefined") {
-            await Swal.fire({
-                icon: "success",
-                title: "Berhasil!",
-                text: "Perubahan laporan sudah terverifikasi."
-            });
-        } else {
-            alert("Perubahan laporan sudah terverifikasi.");
-        }
-    } catch (error) {
-        if (typeof Swal !== "undefined") {
-            await Swal.fire({
-                icon: "error",
-                title: "Gagal menyimpan",
-                text: error.message ||
-                    "Periksa kembali koneksi dan data laporan."
-            });
-        } else {
-            alert(error.message || "Gagal menyimpan perubahan.");
-        }
-    } finally {
-        saveEditReport.disabled = false;
-        saveEditReport.textContent = "Simpan Perubahan";
-    }
-});
-
-
 
 // ========================================
 // AMBIL DATA LAPORAN

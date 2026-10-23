@@ -9,7 +9,6 @@
     <link rel="icon" type="image/png" href="favicon.png">
 
     <link rel="stylesheet" href="css/style.css">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
         (function () {
@@ -198,7 +197,6 @@
                             <th><button type="button" data-sort="komponen">Komponen Pekerjaan <span></span></button>
                             </th>
                             <th><button type="button" data-sort="detail">Detail Pekerjaan <span></span></button></th>
-                            <th>Aksi</th>
                         </tr>
                     </thead>
 
@@ -208,74 +206,6 @@
                         </tr>
                     </tbody>
                 </table>
-
-
-                <!-- Popup Edit Laporan -->
-                <dialog id="editReportDialog" class="edit-report-dialog">
-                    <form id="editReportForm">
-                        <h2>Edit Laporan</h2>
-                        <p>Perbarui komponen pekerjaan, detail pekerjaan, atau status task.</p>
-
-                        <input type="hidden" id="editReportId">
-
-                        <div class="form-group">
-                            <label for="editKomponen">Komponen Pekerjaan</label>
-                            <select id="editKomponen" required>
-                                <option value="" hidden>Pilih komponen pekerjaan</option>
-                                <option value="SETUP PRINTER">SETUP PRINTER</option>
-                                <option value="SETUP SISTEM">SETUP SISTEM</option>
-                                <option value="MIGRASI DATA">MIGRASI DATA</option>
-                                <option value="REFRESH TRAINING">REFRESH TRAINING</option>
-                                <option value="PENAMBAHAN PENDAMPINGAN">PENAMBAHAN PENDAMPINGAN</option>
-                                <option value="REQUEST REPORT">REQUEST REPORT</option>
-                                <option value="SERAH TERIMA">SERAH TERIMA</option>
-                                <option value="PERTANYAAN PERSONAL TENTANG SISTEM">PERTANYAAN PERSONAL TENTANG SISTEM
-                                </option>
-                                <option value="PREPARE DATA CLOSING">PREPARE DATA CLOSING</option>
-                                <option value="TESTING SISTEM">TESTING SISTEM</option>
-                                <option value="MEETING">MEETING</option>
-                                <option value="BACKUP TEAM CS">BACKUP TEAM CS</option>
-                                <option value="ESKALASI DARI CS">ESKALASI DARI CS</option>
-                                <option value="ADMINISTRASI OMNIH">ADMINISTRASI OMNIH</option>
-                                <option value="ESKALASI DARI BOD">ESKALASI DARI BOD</option>
-                                <option value="MAINTENANCE">MAINTENANCE</option>
-                                <option value="DIRECT TIKET DILUAR JAM KERJA">DIRECT TIKET DILUAR JAM KERJA</option>
-                                <option value="TRAINING NEW USER">TRAINING NEW USER</option>
-                                <option value="DIRECT CHAT">DIRECT CHAT</option>
-                                <option value="MONITORING">MONITORING</option>
-                                <option value="ESKALASI BD">ESKALASI BD</option>
-                                <option value="REQUEST EMAIL">REQUEST EMAIL</option>
-                                <option value="PENDAMPINGAN LIVE">PENDAMPINGAN LIVE</option>
-                                <option value="Training Trainer">Training Trainer</option>
-                                <option value="Pra Setup">Pra Setup</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="editDetail">Detail Pekerjaan</label>
-                            <textarea id="editDetail" rows="4" required></textarea>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="editStatus">Status Task</label>
-                            <select id="editStatus" required>
-                                <option value="" hidden>Pilih status</option>
-                                <option value="On Progress">On Progress</option>
-                                <option value="Pending">Pending</option>
-                                <option value="Eksklasi">Eksklasi</option>
-                                <option value="Done">Done</option>
-                                <option value="Waiting Response">Waiting Response</option>
-                                <option value="No Progress">No Progress</option>
-                            </select>
-                        </div>
-
-                        <div class="edit-report-actions">
-                            <button type="button" id="cancelEditReport">Batal</button>
-                            <button type="submit" id="saveEditReport">Simpan Perubahan</button>
-                        </div>
-                    </form>
-                </dialog>
-
 
 
             </div>
