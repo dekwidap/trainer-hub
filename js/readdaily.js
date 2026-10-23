@@ -18,9 +18,13 @@ let currentPage = 1;
 // ELEMEN HALAMAN
 // ========================================
 
+const periodFilter = document.getElementById("filterPeriod");
 const monthFilter = document.getElementById("filterMonth");
 const yearFilter = document.getElementById("filterYear");
 const trainerFilter = document.getElementById("filterTrainer");
+
+const customMonthGroup = document.getElementById("customMonthGroup");
+const customYearGroup = document.getElementById("customYearGroup");
 
 const tableBody = document.getElementById("reportTableBody");
 const tableMessage = document.getElementById("reportTableMessage");
@@ -84,8 +88,6 @@ function initializeFilters() {
 
     const years = new Set([currentYear]);
 
-    // Tahun juga diambil dari data agar laporan lama
-    // tetap dapat difilter.
     allReports.forEach(function (report) {
         const date = parseReportDate(report.tanggal);
 
@@ -94,24 +96,23 @@ function initializeFilters() {
         }
     });
 
-    // Tambahkan satu tahun ke depan.
-    years.add(currentYear + 1);
-
     yearFilter.replaceChildren();
 
     [...years]
         .sort((a, b) => a - b)
         .forEach(function (year) {
             const option = document.createElement("option");
+
             option.value = String(year);
             option.textContent = String(year);
+
             yearFilter.appendChild(option);
         });
 
     monthFilter.value = String(currentMonth);
     yearFilter.value = String(currentYear);
 
-    // Ambil daftar trainer unik dari semua laporan.
+    // Daftar trainer unik
     const trainers = [...new Set(
         allReports
             .map(report => String(report.trainer || "").trim())
@@ -121,50 +122,79 @@ function initializeFilters() {
     trainerFilter.replaceChildren();
 
     const allOption = document.createElement("option");
+
     allOption.value = "";
     allOption.textContent = "Semua Trainer";
+
     trainerFilter.appendChild(allOption);
 
     trainers.forEach(function (trainer) {
         const option = document.createElement("option");
+
         option.value = trainer;
         option.textContent = trainer;
+
         trainerFilter.appendChild(option);
     });
-}
 
+    periodFilter.value = "today";
+
+    customMonthGroup.hidden = true;
+    customYearGroup.hidden = true;
+}
 
 // ========================================
 // FILTER DATA
 // ========================================
 
 function applyFilters() {
+    const selectedPeriod = periodFilter.value;
     const selectedMonth = Number(monthFilter.value);
     const selectedYear = Number(yearFilter.value);
     const selectedTrainer = trainerFilter.value;
+
+    const now = new Date();
+
+    const todayYear = now.getFullYear();
+    const todayMonth = now.getMonth() + 1;
+    const todayDay = now.getDate();
 
     filteredReports = allReports.filter(function (report) {
         const date = parseReportDate(report.tanggal);
 
         if (!date) return false;
 
-        const matchesMonth =
-            date.getMonth() + 1 === selectedMonth;
+        let matchesPeriod = false;
 
-        const matchesYear =
-            date.getFullYear() === selectedYear;
+        if (selectedPeriod === "today") {
+            matchesPeriod =
+                date.getFullYear() === todayYear &&
+                date.getMonth() + 1 === todayMonth &&
+                date.getDate() === todayDay;
+        }
+
+        if (selectedPeriod === "currentMonth") {
+            matchesPeriod =
+                date.getFullYear() === todayYear &&
+                date.getMonth() + 1 === todayMonth;
+        }
+
+        if (selectedPeriod === "customMonth") {
+            matchesPeriod =
+                date.getFullYear() === selectedYear &&
+                date.getMonth() + 1 === selectedMonth;
+        }
 
         const matchesTrainer =
             !selectedTrainer ||
             report.trainer === selectedTrainer;
 
-        return matchesMonth && matchesYear && matchesTrainer;
+        return matchesPeriod && matchesTrainer;
     });
 
     currentPage = 1;
     renderTable();
 }
-
 
 // ========================================
 // TAMPILKAN TABEL DAN PAGINATION
@@ -241,6 +271,15 @@ function renderTable() {
 // ========================================
 // EVENT FILTER, SORTING, DAN PAGINATION
 // ========================================
+periodFilter.addEventListener("change", function () {
+    const isCustomMonth =
+        periodFilter.value === "customMonth";
+
+    customMonthGroup.hidden = !isCustomMonth;
+    customYearGroup.hidden = !isCustomMonth;
+
+    applyFilters();
+});
 
 monthFilter.addEventListener("change", applyFilters);
 yearFilter.addEventListener("change", applyFilters);
@@ -317,3 +356,15 @@ reportScript.onerror = function () {
 };
 
 document.body.appendChild(reportScript);
+
+
+
+function getTodayReportDate() {
+    const now = new Date();
+
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const day = String(now.getDate()).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+}

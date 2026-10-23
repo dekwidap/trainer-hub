@@ -1296,16 +1296,32 @@ body {
 }
 
 /* Filter Bulan, Tahun, Trainer */
-
 .report-filters {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 16px;
     margin-bottom: 20px;
     padding: 20px;
+
     background: var(--header-bg);
     border: 1px solid var(--border-color);
     border-radius: 12px;
+}
+
+/* Tablet */
+@media (max-width: 1000px) {
+    .report-filters {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* HP */
+@media (max-width: 600px) {
+    .report-filters {
+        grid-template-columns: 1fr;
+        gap: 14px;
+        padding: 16px;
+    }
 }
 
 .report-filter-group {
@@ -1489,11 +1505,6 @@ body {
         font-size: 1.35rem;
     }
 
-    .report-filters {
-        grid-template-columns: 1fr;
-        gap: 14px;
-        padding: 16px;
-    }
 
     .report-pagination {
         align-items: flex-start;
