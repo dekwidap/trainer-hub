@@ -305,21 +305,15 @@
 
     </div>
 
-    <!-- FOOTER -->
+    <!-- FOOTER  -->
     <footer class="site-footer">
-
-        <p class="footer-title">
-            Trainer Hub
-        </p>
-
+        <p class="footer-title">Trainer Hub</p>
         <p class="footer-description">
-            Work Links Dashboard
+            One place for all your work links and resources.
         </p>
-
         <p class="footer-copyright">
-            © 2026 Trainer Hub
+            &copy; 2026 Trainer Hub. All rights reserved.
         </p>
-
     </footer>
 
 
@@ -346,78 +340,90 @@
 
             let currentDate = new Date();
 
+
+
             /*
-             * ========================================
-             * DUMMY DATA
-             * Nanti bagian ini akan diganti dengan
-             * data dari Spreadsheet B.
-             * ========================================
+* ========================================
+* DATA SPREADSHEET B
+* ========================================
+*/
+            const CALENDAR_DATA_URL =
+                "https://script.google.com/macros/s/AKfycbxMbIqB8v567N0Tuxf7tHc8NndHrBQ4ygBuSQSfS1AP7yXZJkrO8bfBihBpYgsHmsz4dQ/exec";
+
+
+            /*
+             * Data jadwal yang sudah diubah
+             * menjadi format yang digunakan Calendar.
              */
+            let scheduleData = {};
 
-            const dummySchedule = {
-                "2026-10-01": [
-                    { trainer: "Andi", shift: "P" },
-                    { trainer: "Budi", shift: "M" }
-                ],
 
-                "2026-10-02": [
-                    { trainer: "Citra", shift: "P" },
-                    { trainer: "Deni", shift: "L" }
-                ],
+            /*
+             * Daftar trainer dari Spreadsheet.
+             */
+            let trainerList = [];
 
-                "2026-10-03": [
-                    { trainer: "Andi", shift: "P" },
-                    { trainer: "Citra", shift: "M" },
-                    { trainer: "Budi", shift: "L" }
-                ],
+            const CALENDAR_CACHE_KEY = "pms_calendar_schedule_cache_v1";
+            const CALENDAR_CACHE_TTL = 5 * 60 * 1000; // 5 menit
 
-                "2026-10-04": [
-                    { trainer: "Deni", shift: "C" }
-                ],
 
-                "2026-10-05": [
-                    { trainer: "Andi", shift: "M" },
-                    { trainer: "Budi", shift: "P" },
-                    { trainer: "Citra", shift: "O" }
-                ],
+            function getCalendarCache() {
+                try {
+                    const cached = localStorage.getItem(CALENDAR_CACHE_KEY);
 
-                "2026-10-06": [
-                    { trainer: "Deni", shift: "P" },
-                    { trainer: "Andi", shift: "P" }
-                ],
+                    if (!cached) {
+                        return null;
+                    }
 
-                "2026-10-07": [
-                    { trainer: "Budi", shift: "M" },
-                    { trainer: "Citra", shift: "L" }
-                ],
+                    const parsed = JSON.parse(cached);
 
-                "2026-10-08": [
-                    { trainer: "Andi", shift: "P" },
-                    { trainer: "Deni", shift: "M" }
-                ],
+                    if (
+                        !parsed.timestamp ||
+                        !parsed.data
+                    ) {
+                        return null;
+                    }
 
-                "2026-10-09": [
-                    { trainer: "Budi", shift: "P" },
-                    { trainer: "Citra", shift: "C" },
-                    { trainer: "Deni", shift: "L" }
-                ],
+                    const cacheAge =
+                        Date.now() - parsed.timestamp;
 
-                "2026-10-10": [
-                    { trainer: "Andi", shift: "O" }
-                ],
+                    if (cacheAge > CALENDAR_CACHE_TTL) {
+                        localStorage.removeItem(CALENDAR_CACHE_KEY);
+                        return null;
+                    }
 
-                "2026-10-11": [
-                    { trainer: "Budi", shift: "P" },
-                    { trainer: "Citra", shift: "M" }
-                ],
+                    return parsed.data;
 
-                "2026-10-12": [
-                    { trainer: "Andi", shift: "P" },
-                    { trainer: "Budi", shift: "M" },
-                    { trainer: "Citra", shift: "L" },
-                    { trainer: "Deni", shift: "P" }
-                ]
-            };
+                } catch (error) {
+                    console.warn(
+                        "Calendar cache tidak dapat dibaca:",
+                        error
+                    );
+
+                    return null;
+                }
+            }
+
+
+            function saveCalendarCache(data) {
+                try {
+                    localStorage.setItem(
+                        CALENDAR_CACHE_KEY,
+                        JSON.stringify({
+                            timestamp: Date.now(),
+                            data: data
+                        })
+                    );
+
+                } catch (error) {
+                    console.warn(
+                        "Calendar cache tidak dapat disimpan:",
+                        error
+                    );
+                }
+            }
+
+
 
             /*
             * ========================================
@@ -438,6 +444,413 @@
                     "Citra tukar jadwal dengan Andi karena ada penyesuaian jadwal trainer.",
 
             };
+
+
+            function loadCalendarJsonp() {
+
+                return new Promise(
+                    function (resolve, reject) {
+
+                        const callbackName =
+                            "calendarCallback_" +
+                            Date.now();
+
+
+                        /*
+                         * Buat callback global
+                         */
+
+                        window[callbackName] =
+                            function (data) {
+
+                                /*
+                                 * Bersihkan callback
+                                 */
+
+                                delete window[
+                                    callbackName
+                                ];
+
+                                /*
+                                 * Hapus script
+                                 */
+
+                                if (script.parentNode) {
+
+                                    script.parentNode.removeChild(
+                                        script
+                                    );
+
+                                }
+
+                                resolve(data);
+
+                            };
+
+
+                        /*
+                         * Buat script element
+                         */
+
+                        const script =
+                            document.createElement(
+                                "script"
+                            );
+
+
+                        script.src =
+                            CALENDAR_DATA_URL +
+                            "?callback=" +
+                            encodeURIComponent(
+                                callbackName
+                            );
+
+
+                        /*
+                         * Jika gagal load
+                         */
+
+                        script.onerror =
+                            function () {
+
+                                delete window[
+                                    callbackName
+                                ];
+
+                                if (script.parentNode) {
+
+                                    script.parentNode.removeChild(
+                                        script
+                                    );
+
+                                }
+
+                                reject(
+                                    new Error(
+                                        "Gagal menghubungi server jadwal."
+                                    )
+                                );
+
+                            };
+
+
+                        /*
+                         * Timeout 15 detik
+                         */
+
+                        const timeout =
+                            setTimeout(
+                                function () {
+
+                                    delete window[
+                                        callbackName
+                                    ];
+
+                                    if (
+                                        script.parentNode
+                                    ) {
+
+                                        script.parentNode.removeChild(
+                                            script
+                                        );
+
+                                    }
+
+                                    reject(
+                                        new Error(
+                                            "Server jadwal tidak merespons."
+                                        )
+                                    );
+
+                                },
+                                15000
+                            );
+
+
+                        /*
+                         * Jangan resolve timeout
+                         * setelah callback berhasil.
+                         */
+
+                        const originalCallback =
+                            window[callbackName];
+
+
+                        window[callbackName] =
+                            function (data) {
+
+                                clearTimeout(timeout);
+
+                                delete window[
+                                    callbackName
+                                ];
+
+                                if (
+                                    script.parentNode
+                                ) {
+
+                                    script.parentNode.removeChild(
+                                        script
+                                    );
+
+                                }
+
+                                resolve(data);
+
+                            };
+
+
+                        document
+                            .head
+                            .appendChild(script);
+
+                    }
+                );
+
+            }
+
+            function showCalendarLoading() {
+                console.log("Calendar sedang memuat data...");
+            }
+
+
+            function showCalendarError(message) {
+                console.error("Calendar Error:", message);
+
+                alert(message);
+            }
+
+
+
+            /*
+            * ========================================
+            * LOAD DATA DARI GOOGLE SPREADSHEET
+            * ========================================
+            */
+            async function loadScheduleData() {
+
+                const cachedData = getCalendarCache();
+
+                // =====================================================
+                // 1. JIKA CACHE MASIH VALID
+                // =====================================================
+
+                if (cachedData) {
+
+                    console.log(
+                        "Calendar menggunakan data dari browser cache."
+                    );
+
+                    trainerList =
+                        cachedData.trainers || [];
+
+                    scheduleData =
+                        cachedData.scheduleData || {};
+
+                    if (
+                        cachedData.firstDate
+                    ) {
+                        const firstDate =
+                            new Date(
+                                cachedData.firstDate +
+                                "T00:00:00"
+                            );
+
+                        if (
+                            !isNaN(
+                                firstDate.getTime()
+                            )
+                        ) {
+                            currentDate =
+                                new Date(
+                                    firstDate.getFullYear(),
+                                    firstDate.getMonth(),
+                                    1
+                                );
+                        }
+                    }
+
+                    renderCalendar();
+
+                    return;
+                }
+
+
+                // =====================================================
+                // 2. JIKA BELUM ADA CACHE
+                //    AMBIL DATA DARI SERVER
+                // =====================================================
+
+                try {
+
+                    showCalendarLoading();
+
+                    console.log(
+                        "Calendar mengambil data terbaru dari server..."
+                    );
+
+                    const result =
+                        await loadCalendarJsonp();
+
+                    if (
+                        !result ||
+                        !result.success
+                    ) {
+                        throw new Error(
+                            result?.error ||
+                            "Data jadwal tidak valid."
+                        );
+                    }
+
+
+                    // -------------------------------------------------
+                    // Simpan daftar trainer
+                    // -------------------------------------------------
+
+                    trainerList =
+                        result.trainers || [];
+
+
+                    // -------------------------------------------------
+                    // Ubah data server menjadi format Calendar
+                    // -------------------------------------------------
+
+                    const newScheduleData = {};
+
+                    (result.data || []).forEach(
+                        function (dayData) {
+
+                            newScheduleData[
+                                dayData.date
+                            ] =
+                                (dayData.trainers || [])
+                                    .map(
+                                        function (trainer) {
+
+                                            return {
+                                                trainer:
+                                                    trainer.name,
+
+                                                shift:
+                                                    trainer.code,
+
+                                                label:
+                                                    trainer.label
+                                            };
+
+                                        }
+                                    );
+
+                        }
+                    );
+
+
+                    scheduleData =
+                        newScheduleData;
+
+
+                    // -------------------------------------------------
+                    // Tentukan bulan pertama
+                    // -------------------------------------------------
+
+                    const firstDate =
+                        result.data &&
+                            result.data.length > 0
+                            ? result.data[0].date
+                            : null;
+
+
+                    if (firstDate) {
+
+                        const date =
+                            new Date(
+                                firstDate +
+                                "T00:00:00"
+                            );
+
+                        if (
+                            !isNaN(
+                                date.getTime()
+                            )
+                        ) {
+
+                            currentDate =
+                                new Date(
+                                    date.getFullYear(),
+                                    date.getMonth(),
+                                    1
+                                );
+
+                        }
+
+                    }
+
+
+                    // -------------------------------------------------
+                    // Simpan ke browser cache
+                    // -------------------------------------------------
+
+                    saveCalendarCache({
+                        trainers:
+                            trainerList,
+
+                        scheduleData:
+                            scheduleData,
+
+                        firstDate:
+                            firstDate
+                    });
+
+
+                    console.log(
+                        "Data Calendar berhasil disimpan ke browser cache."
+                    );
+
+
+                    renderCalendar();
+
+                } catch (error) {
+
+                    console.error(
+                        "Calendar Data Error:",
+                        error
+                    );
+
+
+                    // =================================================
+                    // FALLBACK:
+                    // Jika server gagal tetapi cache lama tersedia
+                    // =================================================
+
+                    const oldCache =
+                        getCalendarCache();
+
+
+                    if (oldCache) {
+
+                        console.warn(
+                            "Server gagal. Menggunakan cache Calendar."
+                        );
+
+                        trainerList =
+                            oldCache.trainers || [];
+
+                        scheduleData =
+                            oldCache.scheduleData || {};
+
+                        renderCalendar();
+
+                        return;
+                    }
+
+
+                    showCalendarError(
+                        "Gagal memuat jadwal: " +
+                        error.message
+                    );
+
+                }
+            }
 
 
             /*
@@ -583,7 +996,8 @@
                     shiftContainer.className = "calendar-shifts";
 
 
-                    const schedules = dummySchedule[dateKey] || [];
+                    const schedules =
+                        scheduleData[dateKey] || [];
 
 
                     schedules.slice(0, 4).forEach(schedule => {
@@ -868,8 +1282,15 @@
                          * Nama trainer
                          */
 
+                        const trainerInfo =
+                            document.createElement("div");
+
+                        trainerInfo.className =
+                            "calendar-modal-trainer-info";
+
+
                         const trainerName =
-                            document.createElement("span");
+                            document.createElement("div");
 
                         trainerName.className =
                             "calendar-modal-trainer-name";
@@ -878,12 +1299,32 @@
                             schedule.trainer;
 
 
+                        const trainerShiftLabel =
+                            document.createElement("div");
+
+                        trainerShiftLabel.className =
+                            "calendar-modal-trainer-shift";
+
+                        trainerShiftLabel.textContent =
+                            schedule.label ||
+                            "Jadwal Tidak Dikenal";
+
+
+                        trainerInfo.appendChild(
+                            trainerName
+                        );
+
+                        trainerInfo.appendChild(
+                            trainerShiftLabel
+                        );
+
+
                         trainerItem.appendChild(
                             shiftCode
                         );
 
                         trainerItem.appendChild(
-                            trainerName
+                            trainerInfo
                         );
 
 
@@ -1136,7 +1577,7 @@
                 }
             );
 
-            renderCalendar();
+            loadScheduleData();
 
         });
     </script>
