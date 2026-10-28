@@ -172,8 +172,36 @@
                     </button>
                 </div>
 
+                <div class="calendar-shift-legend">
+
+                    <span class="calendar-legend-item calendar-legend-p">
+                        <strong>P</strong>
+                        <span>Shift Pagi</span>
+                    </span>
+
+                    <span class="calendar-legend-item calendar-legend-m">
+                        <strong>M</strong>
+                        <span>Shift Middle</span>
+                    </span>
+
+                    <span class="calendar-legend-item calendar-legend-l">
+                        <strong>L</strong>
+                        <span>Libur</span>
+                    </span>
+
+                    <span class="calendar-legend-item calendar-legend-c">
+                        <strong>C</strong>
+                        <span>Cuti Operasional</span>
+                    </span>
+
+                    <span class="calendar-legend-item calendar-legend-o">
+                        <strong>O</strong>
+                        <span>Shift ke Property</span>
+                    </span>
+
+                </div>
+
                 <div class="calendar-month-title" id="calendarMonthTitle">
-                    October 2026
                 </div>
 
             </div>
@@ -186,7 +214,7 @@
                     <div>Sel</div>
                     <div>Rab</div>
                     <div>Kam</div>
-                    <div>Jum</div>
+                    <div>Jum</div>  
                     <div>Sab</div>
                     <div>Min</div>
                 </div>
@@ -200,110 +228,6 @@
         </section>
 
     </main>
-
-    <!-- ========================================
-     MODAL DETAIL TANGGAL
-     ======================================== -->
-
-    <div class="calendar-modal-overlay" id="calendarModal">
-
-        <div class="calendar-modal" role="dialog" aria-modal="true">
-
-            <!-- Modal Header -->
-            <div class="calendar-modal-header">
-
-                <div>
-                    <span class="calendar-modal-label">
-                        DETAIL JADWAL
-                    </span>
-
-                    <h3 id="modalDateTitle">
-                        Senin, 12 Oktober 2026
-                    </h3>
-                </div>
-
-                <button type="button" class="calendar-modal-close" id="closeCalendarModal" aria-label="Tutup">
-                    <i data-lucide="x"></i>
-                </button>
-
-            </div>
-
-
-            <!-- Modal Body -->
-            <div class="calendar-modal-body">
-
-                <!-- Jadwal Trainer -->
-                <section class="calendar-modal-section">
-
-                    <div class="calendar-modal-section-title">
-                        <i data-lucide="users"></i>
-                        <span>Jadwal Trainer</span>
-                    </div>
-
-                    <div class="calendar-modal-schedule" id="modalScheduleList">
-                        <!-- Diisi oleh JavaScript -->
-                    </div>
-
-                </section>
-
-
-                <!-- Catatan -->
-                <section class="calendar-modal-section">
-
-                    <div class="calendar-modal-section-title">
-                        <i data-lucide="file-text"></i>
-                        <span>Catatan</span>
-                    </div>
-
-                    <!-- Mode lihat -->
-                    <div class="calendar-modal-note" id="modalNote">
-                        Belum ada catatan untuk tanggal ini.
-                    </div>
-
-                    <!-- Mode edit -->
-                    <div class="calendar-modal-note-edit" id="modalNoteEdit" hidden>
-                        <textarea id="modalNoteInput" class="calendar-note-textarea"
-                            placeholder="Tulis catatan perubahan jadwal..." rows="5"></textarea>
-                    </div>
-
-                </section>
-
-            </div>
-
-
-            <!-- Modal Footer -->
-            <div class="calendar-modal-footer">
-
-                <!-- Mode lihat -->
-                <div class="calendar-modal-actions-view" id="modalActionsView">
-                    <button type="button" class="calendar-modal-secondary-btn" id="closeCalendarModalBtn">
-                        Tutup
-                    </button>
-
-                    <button type="button" class="calendar-modal-primary-btn" id="editCalendarNoteBtn">
-                        <i data-lucide="pencil"></i>
-                        Edit Catatan
-                    </button>
-                </div>
-
-
-                <!-- Mode edit -->
-                <div class="calendar-modal-actions-edit" id="modalActionsEdit" hidden>
-                    <button type="button" class="calendar-modal-secondary-btn" id="cancelCalendarEditBtn">
-                        Batal
-                    </button>
-
-                    <button type="button" class="calendar-modal-primary-btn" id="saveCalendarNoteBtn">
-                        <i data-lucide="save"></i>
-                        Simpan
-                    </button>
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
 
     <!-- FOOTER  -->
     <footer class="site-footer">
@@ -425,25 +349,6 @@
 
 
 
-            /*
-            * ========================================
-            * DUMMY CATATAN
-            * Nanti akan berasal dari Spreadsheet B.
-            * ========================================
-            */
-
-            const dummyNotes = {
-
-                "2026-10-05":
-                    "Budi bertukar jadwal dengan Andi untuk menyesuaikan kebutuhan operasional.",
-
-                "2026-10-09":
-                    "Citra masuk shift C sebagai pengganti trainer yang berhalangan.",
-
-                "2026-10-12":
-                    "Citra tukar jadwal dengan Andi karena ada penyesuaian jadwal trainer.",
-
-            };
 
 
             function loadCalendarJsonp() {
@@ -990,19 +895,6 @@
                     dayCell.appendChild(shiftContainer);
 
 
-                    /*
-                     * Klik tanggal
-                     */
-
-                    dayCell.addEventListener("click", function () {
-
-                        openCalendarModal(
-                            dateKey,
-                            schedules
-                        );
-
-                    });
-
                     calendarGrid.appendChild(dayCell);
                 }
 
@@ -1082,439 +974,6 @@
 
                 renderCalendar();
             });
-
-
-            /*
-             * Render pertama
-             */
-
-
-
-            /*
-* ========================================
-* CALENDAR MODAL
-* ========================================
-*/
-
-            const calendarModal =
-                document.getElementById("calendarModal");
-
-            const closeCalendarModal =
-                document.getElementById("closeCalendarModal");
-
-            const closeCalendarModalBtn =
-                document.getElementById("closeCalendarModalBtn");
-
-            const modalDateTitle =
-                document.getElementById("modalDateTitle");
-
-            const modalScheduleList =
-                document.getElementById("modalScheduleList");
-
-            const modalNote =
-                document.getElementById("modalNote");
-
-            const modalNoteEdit =
-                document.getElementById("modalNoteEdit");
-
-            const modalNoteInput =
-                document.getElementById("modalNoteInput");
-
-            const modalActionsView =
-                document.getElementById("modalActionsView");
-
-            const modalActionsEdit =
-                document.getElementById("modalActionsEdit");
-
-            const editCalendarNoteBtn =
-                document.getElementById("editCalendarNoteBtn");
-
-            const cancelCalendarEditBtn =
-                document.getElementById("cancelCalendarEditBtn");
-
-            const saveCalendarNoteBtn =
-                document.getElementById("saveCalendarNoteBtn");
-
-
-            /*
-             * ========================================
-             * BUKA MODAL
-             * ========================================
-             */
-
-            let selectedCalendarDateKey = null;
-            function openCalendarModal(dateKey, schedules) {
-                selectedCalendarDateKey = dateKey;
-
-                const date = new Date(dateKey + "T00:00:00");
-
-                const formattedDate =
-                    date.toLocaleDateString("id-ID", {
-                        weekday: "long",
-                        day: "numeric",
-                        month: "long",
-                        year: "numeric"
-                    });
-
-                modalDateTitle.textContent =
-                    formattedDate.charAt(0).toUpperCase() +
-                    formattedDate.slice(1);
-
-
-                /*
-                 * Bersihkan daftar trainer
-                 */
-
-                modalScheduleList.innerHTML = "";
-
-
-                /*
-                 * Jika tidak ada jadwal
-                 */
-
-                if (!schedules || schedules.length === 0) {
-
-                    const emptyMessage =
-                        document.createElement("div");
-
-                    emptyMessage.className =
-                        "calendar-modal-empty";
-
-                    emptyMessage.textContent =
-                        "Tidak ada jadwal trainer pada tanggal ini.";
-
-                    modalScheduleList.appendChild(
-                        emptyMessage
-                    );
-
-                } else {
-
-                    /*
-                     * Tampilkan trainer
-                     */
-
-                    schedules.forEach(schedule => {
-
-                        const trainerItem =
-                            document.createElement("div");
-
-                        trainerItem.className =
-                            "calendar-modal-trainer";
-
-
-                        /*
-                         * Shift
-                         */
-
-                        const shiftCode =
-                            document.createElement("span");
-
-                        shiftCode.className =
-                            "calendar-modal-shift-code calendar-modal-shift-" +
-                            schedule.shift.toLowerCase();
-
-                        shiftCode.textContent =
-                            schedule.shift;
-
-
-                        /*
-                         * Nama trainer
-                         */
-
-                        const trainerInfo =
-                            document.createElement("div");
-
-                        trainerInfo.className =
-                            "calendar-modal-trainer-info";
-
-
-                        const trainerName =
-                            document.createElement("div");
-
-                        trainerName.className =
-                            "calendar-modal-trainer-name";
-
-                        trainerName.textContent =
-                            schedule.trainer;
-
-
-                        const trainerShiftLabel =
-                            document.createElement("div");
-
-                        trainerShiftLabel.className =
-                            "calendar-modal-trainer-shift";
-
-                        trainerShiftLabel.textContent =
-                            schedule.label ||
-                            "Jadwal Tidak Dikenal";
-
-
-                        trainerInfo.appendChild(
-                            trainerName
-                        );
-
-                        trainerInfo.appendChild(
-                            trainerShiftLabel
-                        );
-
-
-                        trainerItem.appendChild(
-                            shiftCode
-                        );
-
-                        trainerItem.appendChild(
-                            trainerInfo
-                        );
-
-
-                        modalScheduleList.appendChild(
-                            trainerItem
-                        );
-
-                    });
-
-                }
-
-
-                /*
-                 * Catatan
-                 */
-
-                const note =
-                    dummyNotes[dateKey];
-
-
-                if (note) {
-
-                    modalNote.textContent = note;
-
-                } else {
-
-                    modalNote.textContent =
-                        "Belum ada catatan untuk tanggal ini.";
-
-                }
-
-                exitCalendarEditMode();
-
-
-                /*
-                 * Tampilkan modal
-                 */
-
-                calendarModal.classList.add(
-                    "is-open"
-                );
-
-
-                /*
-                 * Refresh Lucide
-                 */
-
-                if (window.lucide) {
-                    lucide.createIcons();
-                }
-
-            }
-
-
-            /*
-             * ========================================
-             * TUTUP MODAL
-             * ========================================
-             */
-
-            function closeCalendarModalWindow() {
-
-                calendarModal.classList.remove(
-                    "is-open"
-                );
-
-            }
-
-
-            closeCalendarModal.addEventListener(
-                "click",
-                closeCalendarModalWindow
-            );
-
-
-            closeCalendarModalBtn.addEventListener(
-                "click",
-                closeCalendarModalWindow
-            );
-
-
-            /*
-             * ========================================
-             * KLIK AREA GELAP DI LUAR MODAL
-             * ========================================
-             */
-
-            calendarModal.addEventListener(
-                "click",
-                function (event) {
-
-                    if (
-                        event.target === calendarModal
-                    ) {
-
-                        closeCalendarModalWindow();
-
-                    }
-
-                }
-            );
-
-
-            /*
-             * ========================================
-             * TOMBOL ESC
-             * ========================================
-             */
-
-            document.addEventListener(
-                "keydown",
-                function (event) {
-
-                    if (
-                        event.key === "Escape" &&
-                        calendarModal.classList.contains("is-open")
-                    ) {
-
-                        closeCalendarModalWindow();
-
-                    }
-
-                }
-            );
-
-
-            /*
- * ========================================
- * MODE EDIT CATATAN
- * ========================================
- */
-
-            function enterCalendarEditMode() {
-
-                const currentNote =
-                    dummyNotes[selectedCalendarDateKey] || "";
-
-                modalNoteInput.value =
-                    currentNote;
-
-
-                /*
-                 * Sembunyikan mode lihat
-                 */
-
-                modalNote.hidden = true;
-
-                modalActionsView.hidden = true;
-
-
-                /*
-                 * Tampilkan mode edit
-                 */
-
-                modalNoteEdit.hidden = false;
-
-                modalActionsEdit.hidden = false;
-
-
-                /*
-                 * Fokus ke textarea
-                 */
-
-                setTimeout(function () {
-
-                    modalNoteInput.focus();
-
-                }, 50);
-
-            }
-
-            function exitCalendarEditMode() {
-
-                modalNote.hidden = false;
-
-                modalActionsView.hidden = false;
-
-                modalNoteEdit.hidden = true;
-
-                modalActionsEdit.hidden = true;
-
-            }
-
-            editCalendarNoteBtn.addEventListener(
-                "click",
-                function () {
-
-                    enterCalendarEditMode();
-
-                }
-            );
-
-            cancelCalendarEditBtn.addEventListener(
-                "click",
-                function () {
-
-                    exitCalendarEditMode();
-
-                }
-            );
-
-
-            saveCalendarNoteBtn.addEventListener(
-                "click",
-                function () {
-
-                    const newNote =
-                        modalNoteInput.value.trim();
-
-
-                    /*
-                     * Jika kosong,
-                     * hapus catatan tanggal tersebut.
-                     */
-
-                    if (newNote === "") {
-
-                        delete dummyNotes[
-                            selectedCalendarDateKey
-                        ];
-
-                        modalNote.textContent =
-                            "Belum ada catatan untuk tanggal ini.";
-
-                    } else {
-
-                        /*
-                         * Simpan ke dummy object
-                         */
-
-                        dummyNotes[
-                            selectedCalendarDateKey
-                        ] = newNote;
-
-                        /*
-                         * Update tampilan
-                         */
-
-                        modalNote.textContent =
-                            newNote;
-                    }
-
-
-                    /*
-                     * Kembali ke mode lihat
-                     */
-
-                    exitCalendarEditMode();
-
-                }
-            );
 
             loadScheduleData();
 
