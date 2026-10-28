@@ -1763,7 +1763,7 @@ body {
 }
 
 .calendar-day.is-today .calendar-day-number {
-    background: var(--primary-color);
+    background: #000;
     color: #fff;
 }
 
@@ -1822,17 +1822,17 @@ body {
 /* Shift Colors */
 
 .calendar-shift-p {
-    background: rgba(59, 130, 246, 0.12);
-    color: #2563eb;
+    background: rgba(22, 163, 74, 0.12);
+    color: #16a34a;
 }
 
 .calendar-shift-p .calendar-shift-code {
-    background: #2563eb;
+    background: #16a34a;
     color: #fff;
 }
 
 .calendar-shift-m {
-    background: rgba(139, 92, 246, 0.12);
+    background: rgba(124, 58, 237, 0.12);
     color: #7c3aed;
 }
 
@@ -1842,17 +1842,17 @@ body {
 }
 
 .calendar-shift-l {
-    background: rgba(16, 185, 129, 0.12);
-    color: #059669;
+    background: rgba(220, 38, 38, 0.12);
+    color: #dc2626;
 }
 
 .calendar-shift-l .calendar-shift-code {
-    background: #059669;
+    background: #dc2626;
     color: #fff;
 }
 
 .calendar-shift-c {
-    background: rgba(245, 158, 11, 0.14);
+    background: rgba(217, 119, 6, 0.14);
     color: #d97706;
 }
 
@@ -1862,12 +1862,12 @@ body {
 }
 
 .calendar-shift-o {
-    background: rgba(107, 114, 128, 0.12);
-    color: #6b7280;
+    background: rgba(37, 99, 235, 0.12);
+    color: #2563eb;
 }
 
 .calendar-shift-o .calendar-shift-code {
-    background: #6b7280;
+    background: #2563eb;
     color: #fff;
 }
 
@@ -2117,7 +2117,7 @@ body {
 /* Shift Colors */
 
 .calendar-modal-shift-p {
-    background: #2563eb;
+    background: #16a34a;
 }
 
 .calendar-modal-shift-m {
@@ -2125,7 +2125,7 @@ body {
 }
 
 .calendar-modal-shift-l {
-    background: #059669;
+    background: #dc2626;
 }
 
 .calendar-modal-shift-c {
@@ -2133,7 +2133,7 @@ body {
 }
 
 .calendar-modal-shift-o {
-    background: #6b7280;
+    background: #2563eb;
 }
 
 

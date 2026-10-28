@@ -647,28 +647,6 @@
                     scheduleData =
                         cachedData.scheduleData || {};
 
-                    if (
-                        cachedData.firstDate
-                    ) {
-                        const firstDate =
-                            new Date(
-                                cachedData.firstDate +
-                                "T00:00:00"
-                            );
-
-                        if (
-                            !isNaN(
-                                firstDate.getTime()
-                            )
-                        ) {
-                            currentDate =
-                                new Date(
-                                    firstDate.getFullYear(),
-                                    firstDate.getMonth(),
-                                    1
-                                );
-                        }
-                    }
 
                     renderCalendar();
 
@@ -750,43 +728,6 @@
 
 
                     // -------------------------------------------------
-                    // Tentukan bulan pertama
-                    // -------------------------------------------------
-
-                    const firstDate =
-                        result.data &&
-                            result.data.length > 0
-                            ? result.data[0].date
-                            : null;
-
-
-                    if (firstDate) {
-
-                        const date =
-                            new Date(
-                                firstDate +
-                                "T00:00:00"
-                            );
-
-                        if (
-                            !isNaN(
-                                date.getTime()
-                            )
-                        ) {
-
-                            currentDate =
-                                new Date(
-                                    date.getFullYear(),
-                                    date.getMonth(),
-                                    1
-                                );
-
-                        }
-
-                    }
-
-
-                    // -------------------------------------------------
                     // Simpan ke browser cache
                     // -------------------------------------------------
 
@@ -797,8 +738,6 @@
                         scheduleData:
                             scheduleData,
 
-                        firstDate:
-                            firstDate
                     });
 
 
