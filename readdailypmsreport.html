@@ -145,17 +145,15 @@
 
             <!-- FILTER -->
             <div class="report-filters">
-
                 <div class="report-filter-group">
                     <label for="filterPeriod">Periode</label>
                     <select id="filterPeriod">
                         <option value="today">Hari Ini</option>
-                        <option value="currentMonth">Bulan Ini</option>
-                        <option value="customMonth">Pilih Bulan</option>
+                        <option value="month">Bulan</option>
                     </select>
                 </div>
 
-                <div class="report-filter-group" id="customMonthGroup" hidden>
+                <div class="report-filter-group" id="monthFilterGroup" hidden>
                     <label for="filterMonth">Bulan</label>
                     <select id="filterMonth">
                         <option value="1">Januari</option>
@@ -173,7 +171,7 @@
                     </select>
                 </div>
 
-                <div class="report-filter-group" id="customYearGroup" hidden>
+                <div class="report-filter-group" id="yearFilterGroup" hidden>
                     <label for="filterYear">Tahun</label>
                     <select id="filterYear"></select>
                 </div>

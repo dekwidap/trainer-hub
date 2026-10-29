@@ -1331,6 +1331,10 @@ body {
     min-width: 0;
 }
 
+.report-filter-group[hidden] {
+    display: none;
+}
+
 .report-filter-group label {
     color: var(--text-color);
     font-size: 0.875rem;
