@@ -185,10 +185,18 @@
 
             </div>
 
-            <!-- STATUS DATA -->
-            <p id="reportTableMessage" class="report-table-message">
-                Memuat data laporan...
-            </p>
+            <!-- STATUS DATA + REFRESH -->
+            <div class="report-table-toolbar">
+
+                <p id="reportTableMessage" class="report-table-message">
+                    Memuat data laporan...
+                </p>
+
+                <button type="button" id="refreshReportData" class="report-refresh-button">
+                   <i data-lucide="rotate-ccw"></i> Refresh Data
+                </button>
+
+            </div>
 
             <!-- TABLE -->
             <div class="report-table-wrapper">

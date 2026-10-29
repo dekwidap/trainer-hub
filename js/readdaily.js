@@ -18,7 +18,7 @@ const REPORT_CACHE_KEY =
 
 let allReports = [];
 let filteredReports = [];
-let currentPage = 1;
+let reportCurrentPage = 1;
 
 
 // ========================================
@@ -45,6 +45,8 @@ const tableBody =
 
 const tableMessage =
     document.getElementById("reportTableMessage");
+
+const refreshButton = document.getElementById("refreshReportData");
 
 const pageInfo =
     document.getElementById("reportPageInfo");
@@ -333,6 +335,8 @@ function processReportData(reports) {
     initializeFilters();
 
     applyFilters();
+
+
 }
 
 
@@ -469,7 +473,7 @@ function applyFilters() {
         return matchesPeriod && matchesTrainer;
     });
 
-    currentPage = 1;
+    reportCurrentPage = 1;
 
     renderTable();
 }
@@ -501,16 +505,16 @@ function renderTable() {
     // setelah filter berubah.
     if (
         totalPages > 0 &&
-        currentPage > totalPages
+        reportCurrentPage > totalPages
     ) {
 
-        currentPage =
+        reportCurrentPage =
             totalPages;
     }
 
 
     const startIndex =
-        (currentPage - 1) *
+        (reportCurrentPage - 1) *
         REPORTS_PER_PAGE;
 
 
@@ -623,7 +627,7 @@ function renderTable() {
         totalPages > 0
 
             ? "Halaman " +
-            currentPage +
+            reportCurrentPage +
             " dari " +
             totalPages
 
@@ -631,12 +635,12 @@ function renderTable() {
 
 
     prevButton.disabled =
-        currentPage <= 1;
+        reportCurrentPage <= 1;
 
 
     nextButton.disabled =
         totalPages === 0 ||
-        currentPage >= totalPages;
+        reportCurrentPage >= totalPages;
 }
 
 
@@ -679,9 +683,9 @@ prevButton.addEventListener(
     "click",
     function () {
 
-        if (currentPage > 1) {
+        if (reportCurrentPage > 1) {
 
-            currentPage--;
+            reportCurrentPage--;
 
             renderTable();
         }
@@ -701,11 +705,11 @@ nextButton.addEventListener(
 
 
         if (
-            currentPage <
+            reportCurrentPage <
             totalPages
         ) {
 
-            currentPage++;
+            reportCurrentPage++;
 
             renderTable();
         }
@@ -780,6 +784,17 @@ window.handleReportData =
         processReportData(
             result.reports
         );
+
+        refreshButton.disabled = false;
+
+        refreshButton.innerHTML = `
+            <i data-lucide="rotate-ccw"></i>
+            Refresh Data
+        `;
+
+        if (typeof lucide !== "undefined") {
+            lucide.createIcons();
+        }
     };
 
 
@@ -917,3 +932,50 @@ function getTodayReportDate() {
 
     return `${year}-${month}-${day}`;
 }
+
+function refreshReportData() {
+    if (refreshButton.disabled) return;
+
+    refreshButton.disabled = true;
+
+    refreshButton.innerHTML = `
+        <i data-lucide="rotate-ccw"></i>
+        Memuat...
+    `;
+
+    if (typeof lucide !== "undefined") {
+        lucide.createIcons();
+    }
+
+    tableMessage.textContent = "Mengambil data terbaru...";
+
+    const refreshScript = document.createElement("script");
+
+    refreshScript.src =
+        REPORT_DATA_URL +
+        "?action=readReports&t=" +
+        Date.now();
+
+    refreshScript.async = true;
+
+    refreshScript.onerror = function () {
+        tableMessage.textContent =
+            "Gagal mengambil data terbaru.";
+
+        refreshButton.disabled = false;
+
+        refreshButton.innerHTML = `
+            <i data-lucide="rotate-ccw"></i>
+            Refresh Data
+        `;
+
+        if (typeof lucide !== "undefined") {
+            lucide.createIcons();
+        }
+
+        refreshScript.remove();
+    };
+
+    document.body.appendChild(refreshScript);
+}
+refreshButton.addEventListener("click", refreshReportData);
