@@ -121,32 +121,13 @@ function formatReportDate(value) {
 
 
 // ========================================
-// CACHE - IDENTITAS PERIODE JAM
+// CACHE - VALID SELAMA 24 JAM
 // ========================================
 
-function getCurrentCachePeriod() {
+const REPORT_CACHE_DURATION = 24 * 60 * 60 * 1000;
 
-    const now = new Date();
-
-    const year =
-        now.getFullYear();
-
-    const month =
-        String(
-            now.getMonth() + 1
-        ).padStart(2, "0");
-
-    const day =
-        String(
-            now.getDate()
-        ).padStart(2, "0");
-
-    const hour =
-        String(
-            now.getHours()
-        ).padStart(2, "0");
-
-    return `${year}-${month}-${day}-${hour}`;
+function getCurrentCacheTime() {
+    return Date.now();
 }
 
 
@@ -157,17 +138,9 @@ function getCurrentCachePeriod() {
 function saveReportsToCache(reports) {
 
     try {
-
         const cacheData = {
-
-            period:
-                getCurrentCachePeriod(),
-
-            savedAt:
-                new Date().toISOString(),
-
-            reports:
-                reports
+            savedAt: getCurrentCacheTime(),
+            reports: reports
         };
 
         localStorage.setItem(
@@ -193,22 +166,19 @@ function saveReportsToCache(reports) {
     }
 }
 
-
 // ========================================
 // CACHE - BACA DATA
+// VALID SELAMA 24 JAM
 // ========================================
 
 function getReportsFromCache() {
-
     try {
-
         const rawCache =
             localStorage.getItem(
                 REPORT_CACHE_KEY
             );
 
         if (!rawCache) {
-
             console.log(
                 "[CACHE] Belum ada cache."
             );
@@ -221,12 +191,9 @@ function getReportsFromCache() {
 
         if (
             !cacheData ||
-            !Array.isArray(
-                cacheData.reports
-            ) ||
-            !cacheData.period
+            !Array.isArray(cacheData.reports) ||
+            !cacheData.savedAt
         ) {
-
             console.warn(
                 "[CACHE] Format cache tidak valid."
             );
@@ -238,31 +205,20 @@ function getReportsFromCache() {
             return null;
         }
 
-
-        const currentPeriod =
-            getCurrentCachePeriod();
-
+        const cacheAge =
+            Date.now() - cacheData.savedAt;
 
         console.log(
-            "[CACHE] Periode cache:",
-            cacheData.period
+            "[CACHE] Umur cache:",
+            Math.round(cacheAge / 1000 / 60),
+            "menit"
         );
 
-        console.log(
-            "[CACHE] Periode sekarang:",
-            currentPeriod
-        );
-
-
         // ========================================
-        // CACHE MASIH BERADA PADA JAM YANG SAMA
+        // CACHE MASIH VALID
         // ========================================
 
-        if (
-            cacheData.period ===
-            currentPeriod
-        ) {
-
+        if (cacheAge < REPORT_CACHE_DURATION) {
             console.log(
                 "[CACHE] Cache masih valid."
             );
@@ -270,19 +226,17 @@ function getReportsFromCache() {
             return cacheData.reports;
         }
 
-
         // ========================================
-        // CACHE SUDAH MASUK JAM BARU
+        // CACHE SUDAH LEBIH DARI 24 JAM
         // ========================================
 
         console.log(
-            "[CACHE] Jam sudah berubah. Cache perlu diperbarui."
+            "[CACHE] Cache sudah lebih dari 24 jam."
         );
 
         return null;
 
     } catch (error) {
-
         console.warn(
             "[CACHE] Gagal membaca cache:",
             error
@@ -295,7 +249,6 @@ function getReportsFromCache() {
         return null;
     }
 }
-
 
 // ========================================
 // PROSES DATA LAPORAN
