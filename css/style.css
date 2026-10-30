@@ -1797,8 +1797,13 @@ body {
 }
 
 .calendar-day.is-today .calendar-day-number {
-    background: #000;
+    background: rgba(93, 93, 24, 0.604);
     color: #fff;
+}
+
+.calendar-day.is-today {
+    background: rgba(255, 255, 1, 0.153);
+    border: 1px solid rgba(22, 163, 74, 0.35);
 }
 
 /* Shift List */
