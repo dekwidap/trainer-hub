@@ -1561,33 +1561,6 @@ body {
     cursor: not-allowed;
 }
 
-/* Tablet dan layar kecil */
-
-@media (max-width: 768px) {
-    .report-page {
-        padding: 20px 0;
-    }
-
-    .report-page-header h2 {
-        font-size: 1.35rem;
-    }
-
-
-    .report-pagination {
-        align-items: flex-start;
-        flex-direction: column;
-    }
-
-    .report-pagination-actions {
-        width: 100%;
-    }
-
-    .report-pagination-actions button {
-        flex: 1;
-    }
-}
-
-
 /* ========================================
    HALAMAN JADWAL TRAINER / CALENDAR
    ======================================== */
@@ -1942,29 +1915,6 @@ body {
     font-weight: 600;
 }
 
-/* Mobile */
-
-@media (max-width: 768px) {
-
-    .calendar-page {
-        padding: 20px 12px 30px;
-    }
-
-    .calendar-toolbar {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .calendar-month-title {
-        order: -1;
-    }
-
-    .calendar-day {
-        min-height: 110px;
-    }
-}
-
-
 
 .link-filter {
     display: flex;
@@ -2049,25 +1999,32 @@ body {
     color: #dc2626;
 }
 
-/* Shift Legend */
-
 .calendar-shift-legend {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 16px;
+
     flex: 1;
+    min-width: 0;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    scrollbar-width: none;
+}
+
+.calendar-shift-legend::-webkit-scrollbar {
+    display: none;
 }
 
 .calendar-legend-item {
     display: inline-flex;
     align-items: center;
-    gap: 7px;
+    gap: 6px;
 
+    flex: 0 0 auto;
     white-space: nowrap;
-
-    font-size: 13px;
-    font-weight: 600;
 }
 
 .calendar-legend-item strong {
@@ -2172,11 +2129,11 @@ body {
 
     padding: 10px 14px;
 
-    border: 1px solid var(--border-color);
+    border: 1px solid #16a34a;
     border-radius: 8px;
 
-    background: var(--header-bg);
-    color: var(--text-color);
+    background: #16a34a;
+    color: #ffffff;
 
     font-size: 0.85rem;
     font-weight: 600;
@@ -2190,7 +2147,8 @@ body {
 }
 
 .calendar-refresh-button:hover {
-    background: var(--button-hover);
+    background: #15803d;
+    border-color: #15803d;
 }
 
 .calendar-refresh-button:disabled {
@@ -2224,5 +2182,171 @@ body {
 
     .calendar-refresh-button {
         flex-shrink: 0;
+    }
+}
+
+/* ========================================
+   CALENDAR DATA LOADING OVERLAY
+   ======================================== */
+
+.calendar-card {
+    position: relative;
+}
+
+.calendar-loading-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 20;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: color-mix(in srgb,
+            var(--header-bg) 78%,
+            transparent);
+
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+
+    opacity: 0;
+    visibility: hidden;
+
+    pointer-events: none;
+
+    transition:
+        opacity 0.25s ease,
+        visibility 0.25s ease;
+}
+
+.calendar-loading-overlay.is-visible {
+    opacity: 1;
+    visibility: visible;
+
+    pointer-events: all;
+}
+
+.calendar-loading-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 220px;
+    padding: 22px 26px;
+
+    background: var(--header-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.08);
+
+    text-align: center;
+}
+
+.calendar-loading-spinner {
+    width: 34px;
+    height: 34px;
+
+    margin-bottom: 14px;
+
+    border: 3px solid var(--border-color);
+    border-top-color: #16a34a;
+    border-radius: 50%;
+
+    animation:
+        calendar-loading-spin 0.8s linear infinite;
+}
+
+.calendar-loading-title {
+    color: var(--text-color);
+
+    font-size: 14px;
+    font-weight: 700;
+
+    line-height: 1.4;
+}
+
+.calendar-loading-text {
+    margin-top: 4px;
+
+    color: var(--muted-color);
+
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+@keyframes calendar-loading-spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Animasi ikon pada tombol Update Data */
+
+.calendar-refresh-button.is-loading svg {
+    animation:
+        calendar-loading-spin 0.8s linear infinite;
+}
+
+/* Mobile */
+
+@media (max-width: 768px) {
+
+    .calendar-page {
+        padding: 20px 12px 30px;
+    }
+
+    .calendar-toolbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .calendar-month-title {
+        order: -1;
+    }
+
+    .calendar-day {
+        min-height: 110px;
+    }
+
+    .calendar-shift-legend {
+        width: 100%;
+        justify-content: flex-start;
+
+        padding-bottom: 2px;
+
+        gap: 12px;
+    }
+
+    .calendar-legend-item {
+        flex: 0 0 auto;
+    }
+
+    .report-page {
+        padding: 20px 0;
+    }
+
+    .report-page-header h2 {
+        font-size: 1.35rem;
+    }
+
+
+    .report-pagination {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .report-pagination-actions {
+        width: 100%;
+    }
+
+    .report-pagination-actions button {
+        flex: 1;
     }
 }

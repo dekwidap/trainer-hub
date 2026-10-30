@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let trainerList = [];
 
     const CALENDAR_CACHE_KEY = "pms_calendar_schedule_cache_v1";
-    const CALENDAR_CACHE_TTL = 5 * 60 * 1000; // 5 menit
+    const CALENDAR_CACHE_TTL = 24 * 60 * 60 * 1000; // 24 jam
 
 
     function getCalendarCache() {
@@ -168,11 +168,47 @@ document.addEventListener("DOMContentLoaded", function () {
             document.head.appendChild(script);
         });
     }
-
     function showCalendarLoading() {
-        console.log("Calendar sedang memuat data...");
+        const calendarCard = document.querySelector(".calendar-card");
+
+        if (!calendarCard) return;
+
+        let overlay = calendarCard.querySelector(".calendar-loading-overlay");
+
+        if (!overlay) {
+            overlay = document.createElement("div");
+            overlay.className = "calendar-loading-overlay";
+
+            overlay.innerHTML = `
+            <div class="calendar-loading-content">
+                <div class="calendar-loading-spinner"></div>
+
+                <div class="calendar-loading-title">
+                    Memperbarui jadwal...
+                </div>
+
+                <div class="calendar-loading-text">
+                    Kalender sedang disinkronkan
+                </div>
+            </div>
+        `;
+
+            calendarCard.appendChild(overlay);
+        }
+
+        requestAnimationFrame(function () {
+            overlay.classList.add("is-visible");
+        });
     }
 
+    function hideCalendarLoading() {
+        const overlay =
+            document.querySelector(".calendar-loading-overlay");
+
+        if (!overlay) return;
+
+        overlay.classList.remove("is-visible");
+    }
 
     function showCalendarError(message) {
         console.error("Calendar Error:", message);
@@ -599,15 +635,18 @@ document.addEventListener("DOMContentLoaded", function () {
         refreshCalendarButton.addEventListener(
             "click",
             async function () {
-
                 refreshCalendarButton.disabled = true;
 
+                refreshCalendarButton.classList.add("is-loading");
+
                 refreshCalendarButton.innerHTML =
-                    `<i data-lucide="rotate-ccw"></i> Memuat...`;
+                    `<i data-lucide="loader-circle"></i> Memperbarui...`;
 
                 if (window.lucide) {
                     lucide.createIcons();
                 }
+
+                showCalendarLoading();
 
                 try {
 
@@ -708,8 +747,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 } finally {
 
-                    refreshCalendarButton.disabled =
-                        false;
+                    hideCalendarLoading();
+
+                    refreshCalendarButton.disabled = false;
+
+                    refreshCalendarButton.classList.remove("is-loading");
 
                     refreshCalendarButton.innerHTML =
                         `<i data-lucide="rotate-ccw"></i> Update Data`;
