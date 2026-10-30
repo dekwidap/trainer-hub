@@ -1266,12 +1266,12 @@ body {
 /* ========================================
    HALAMAN LIHAT LAPORAN
    ======================================== */
-
 .report-page {
     width: 100%;
     max-width: 1440px;
     margin: 0 auto;
-    padding: 28px 0;
+    padding: 28px 20px;
+    box-sizing: border-box;
     color: var(--text-color);
 }
 
@@ -2331,7 +2331,7 @@ body {
     }
 
     .report-page {
-        padding: 20px 0;
+        padding: 20px 12px;
     }
 
     .report-page-header h2 {
