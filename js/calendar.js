@@ -93,6 +93,70 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    function updateCalendarCacheStatus() {
+        const refreshButton =
+            document.getElementById("refreshCalendarData");
+
+        if (!refreshButton) return;
+
+        const headerActions =
+            refreshButton.parentElement;
+
+        if (!headerActions) return;
+
+        let status =
+            headerActions.querySelector(".calendar-cache-status");
+
+        if (!status) {
+            status = document.createElement("span");
+            status.className = "calendar-cache-status";
+
+            headerActions.appendChild(status);
+        }
+
+        try {
+            const cached =
+                localStorage.getItem(CALENDAR_CACHE_KEY);
+
+            if (!cached) {
+                status.textContent =
+                    "Belum pernah diperbarui";
+
+                return;
+            }
+
+            const parsed =
+                JSON.parse(cached);
+
+            if (!parsed.timestamp) {
+                status.textContent =
+                    "Belum pernah diperbarui";
+
+                return;
+            }
+
+            const date =
+                new Date(parsed.timestamp);
+
+            status.textContent =
+                "Terakhir diperbarui: " +
+                date.toLocaleDateString("id-ID", {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric"
+                }) +
+                ", " +
+                date.toLocaleTimeString("id-ID", {
+                    hour: "2-digit",
+                    minute: "2-digit"
+                });
+
+        } catch (error) {
+            status.textContent =
+                "Status pembaruan tidak tersedia";
+        }
+    }
+
 
 
 
@@ -245,6 +309,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
             renderCalendar();
+            updateCalendarCacheStatus();
 
             return;
         }
@@ -723,6 +788,8 @@ document.addEventListener("DOMContentLoaded", function () {
                         scheduleData:
                             scheduleData
                     });
+
+                    updateCalendarCacheStatus();
 
                     /*
                     * RENDER ULANG
