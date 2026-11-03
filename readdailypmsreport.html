@@ -192,9 +192,16 @@
                     Memuat data laporan...
                 </p>
 
-                <button type="button" id="refreshReportData" class="report-refresh-button">
-                   <i data-lucide="rotate-ccw"></i> Refresh Data
-                </button>
+                <div class="report-page-header-actions">
+                    <span id="reportCacheStatus" class="report-cache-status">
+                        Belum pernah diperbarui
+                    </span>
+
+                    <button type="button" id="refreshReportData" class="report-refresh-button">
+                        <i data-lucide="rotate-ccw"></i>
+                        Refresh Data
+                    </button>
+                </div>
 
             </div>
 

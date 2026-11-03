@@ -728,7 +728,7 @@ window.handleReportData =
         saveReportsToCache(
             result.reports
         );
-
+        updateReportCacheStatus();
 
         // ========================================
         // PROSES DATA
@@ -737,6 +737,8 @@ window.handleReportData =
         processReportData(
             result.reports
         );
+
+        hideReportLoading();
 
         refreshButton.disabled = false;
 
@@ -749,6 +751,67 @@ window.handleReportData =
             lucide.createIcons();
         }
     };
+
+
+// ========================================
+// REPORT DATA LOADING
+// ========================================
+
+function showReportLoading() {
+    const reportPage =
+        document.querySelector(".report-page");
+
+    if (!reportPage) return;
+
+    let overlay =
+        reportPage.querySelector(
+            ".report-loading-overlay"
+        );
+
+    if (!overlay) {
+        overlay = document.createElement("div");
+
+        overlay.className =
+            "report-loading-overlay";
+
+        overlay.innerHTML = `
+            <div class="report-loading-content">
+
+                <div class="report-loading-spinner"></div>
+
+                <div class="report-loading-title">
+                    Memuat laporan...
+                </div>
+
+                <div class="report-loading-text">
+                    Data Daily PMS Report sedang disinkronkan
+                </div>
+
+            </div>
+        `;
+
+        reportPage.appendChild(overlay);
+    }
+
+    requestAnimationFrame(function () {
+        overlay.classList.add("is-visible");
+    });
+}
+
+
+function hideReportLoading() {
+    const overlay =
+        document.querySelector(
+            ".report-loading-overlay"
+        );
+
+    if (!overlay) return;
+
+    overlay.classList.remove("is-visible");
+}
+
+
+
 
 
 // ========================================
@@ -825,6 +888,7 @@ function loadReports() {
             cachedReports
         );
 
+        updateReportCacheStatus();
 
         return;
     }
@@ -838,7 +902,7 @@ function loadReports() {
     console.log(
         "[CACHE] Meminta data terbaru dari server."
     );
-
+    showReportLoading();
 
     fetchLatestReports();
 }
@@ -886,13 +950,70 @@ function getTodayReportDate() {
     return `${year}-${month}-${day}`;
 }
 
+
+// ========================================
+// REPORT CACHE STATUS
+// ========================================
+function updateReportCacheStatus() {
+    const status =
+        document.getElementById("reportCacheStatus");
+
+    if (!status) return;
+
+    try {
+        const rawCache =
+            localStorage.getItem(
+                REPORT_CACHE_KEY
+            );
+
+        if (!rawCache) {
+            status.textContent =
+                "Belum pernah diperbarui";
+            return;
+        }
+
+        const cacheData =
+            JSON.parse(rawCache);
+
+        if (!cacheData || !cacheData.savedAt) {
+            status.textContent =
+                "Belum pernah diperbarui";
+            return;
+        }
+
+        const date =
+            new Date(cacheData.savedAt);
+
+        status.textContent =
+            "Terakhir diperbarui: " +
+            date.toLocaleDateString("id-ID", {
+                day: "2-digit",
+                month: "short",
+                year: "numeric"
+            }) +
+            ", " +
+            date.toLocaleTimeString("id-ID", {
+                hour: "2-digit",
+                minute: "2-digit"
+            });
+
+    } catch (error) {
+        status.textContent =
+            "Status pembaruan tidak tersedia";
+    }
+}
+
 function refreshReportData() {
     if (refreshButton.disabled) return;
 
+    // Hapus cache Daily PMS Report
+    localStorage.removeItem(REPORT_CACHE_KEY);
+
+    // Aktifkan loading tombol
     refreshButton.disabled = true;
 
     refreshButton.innerHTML = `
-        <i data-lucide="rotate-ccw"></i>
+        <i data-lucide="loader-circle"></i>
         Memuat...
     `;
 
@@ -900,9 +1021,14 @@ function refreshReportData() {
         lucide.createIcons();
     }
 
-    tableMessage.textContent = "Mengambil data terbaru...";
+    // Tampilkan loading overlay
+    showReportLoading();
 
-    const refreshScript = document.createElement("script");
+    tableMessage.textContent =
+        "Mengambil data terbaru...";
+
+    const refreshScript =
+        document.createElement("script");
 
     refreshScript.src =
         REPORT_DATA_URL +
@@ -912,6 +1038,8 @@ function refreshReportData() {
     refreshScript.async = true;
 
     refreshScript.onerror = function () {
+        hideReportLoading();
+
         tableMessage.textContent =
             "Gagal mengambil data terbaru.";
 
@@ -931,4 +1059,6 @@ function refreshReportData() {
 
     document.body.appendChild(refreshScript);
 }
+
+
 refreshButton.addEventListener("click", refreshReportData);
