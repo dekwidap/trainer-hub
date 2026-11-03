@@ -631,7 +631,15 @@
                 reverseButtons: true
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = "readdailypmsreport.html";
+
+                    // Hapus cache Daily PMS Report
+                    localStorage.removeItem(
+                        "trainerHub_dailyReports_cache"
+                    );
+
+                    // Pindah ke halaman laporan
+                    window.location.href =
+                        "readdailypmsreport.html";
                 }
 
                 // Jika memilih "Input Lagi" atau menutup popup,

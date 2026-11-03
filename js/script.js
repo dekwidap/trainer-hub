@@ -185,17 +185,29 @@ document.querySelectorAll(".nav-dropdown").forEach(function (dropdown) {
 });
 
 
-const categoryFilter = document.getElementById("categoryFilter");
-const linkSections = document.querySelectorAll(".link-section");
+const categoryFilter =
+    document.getElementById("categoryFilter");
 
-categoryFilter.addEventListener("change", function () {
-    const selectedCategory = this.value;
+const linkSections =
+    document.querySelectorAll(".link-section");
 
-    linkSections.forEach(function (section) {
-        const category = section.dataset.category;
+if (categoryFilter) {
+    categoryFilter.addEventListener(
+        "change",
+        function () {
+            const selectedCategory =
+                this.value;
 
-        section.hidden =
-            selectedCategory !== "all" &&
-            category !== selectedCategory;
-    });
-});
+            linkSections.forEach(
+                function (section) {
+                    const category =
+                        section.dataset.category;
+
+                    section.hidden =
+                        selectedCategory !== "all" &&
+                        category !== selectedCategory;
+                }
+            );
+        }
+    );
+}
