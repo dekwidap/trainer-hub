@@ -408,9 +408,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
             renderCalendar();
+            hideCalendarLoading();
 
         } catch (error) {
 
+            hideCalendarLoading();
             console.error(
                 "Calendar Data Error:",
                 error
