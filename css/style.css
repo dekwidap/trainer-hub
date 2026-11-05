@@ -1931,69 +1931,6 @@ body {
 }
 
 
-.link-filter {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-
-    margin-bottom: 24px;
-    padding: 16px 20px;
-
-    background: var(--header-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-}
-
-.link-filter label {
-    flex-shrink: 0;
-
-    color: var(--text-color);
-    font-size: 0.9rem;
-    font-weight: 600;
-}
-
-.link-filter select {
-    width: 100%;
-    max-width: 420px;
-    min-height: 42px;
-
-    padding: 10px 12px;
-
-    color: var(--text-color);
-    background-color: var(--bg-color);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-
-    font: inherit;
-    font-size: 0.9rem;
-    cursor: pointer;
-}
-
-.link-filter select:focus {
-    outline: none;
-    border-color: var(--logo-color);
-    box-shadow: 0 0 0 3px color-mix(in srgb,
-            var(--logo-color) 15%,
-            transparent);
-}
-
-.link-section[hidden] {
-    display: none;
-}
-
-@media (max-width: 600px) {
-    .link-filter {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 8px;
-        padding: 16px;
-    }
-
-    .link-filter select {
-        max-width: none;
-    }
-}
-
 
 .calendar-data-loading,
 .calendar-data-error {
@@ -2521,4 +2458,118 @@ body {
         width: 100%;
         text-align: right;
     }
+}
+
+/* =========================================
+   LINK FILTER - CATEGORY & KEYWORD
+========================================= */
+
+.link-filter {
+    display: flex;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 16px;
+
+    margin-bottom: 24px;
+    padding: 18px 20px;
+
+    background: var(--header-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+}
+
+/* Kelompok filter */
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+
+    min-width: 0;
+}
+
+/* Label */
+.link-filter .filter-group label {
+    color: var(--text-color);
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+/* Dropdown kategori */
+#categoryFilter {
+    width: 100%;
+    min-width: 260px;
+    max-width: 420px;
+}
+
+/* Input keyword */
+#keywordFilter {
+    width: 320px;
+    max-width: 100%;
+}
+
+/* Tampilan dropdown dan input */
+.link-filter select,
+.link-filter input {
+    box-sizing: border-box;
+    height: 42px;
+    padding: 0 12px;
+
+    color: var(--text-color);
+    background-color: var(--bg-color);
+
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+
+    font-family: inherit;
+    font-size: 0.9rem;
+
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Focus */
+.link-filter select:focus,
+.link-filter input:focus {
+    outline: none;
+    border-color: var(--logo-color);
+
+    box-shadow: 0 0 0 3px color-mix(in srgb,
+            var(--logo-color) 15%,
+            transparent);
+}
+
+/* Placeholder */
+#keywordFilter::placeholder {
+    color: var(--muted-color);
+    opacity: 0.8;
+}
+
+/* Sembunyikan kategori yang tidak memiliki hasil */
+.link-section[hidden] {
+    display: none;
+}
+
+/* Responsive Mobile */
+@media (max-width: 600px) {
+    .link-filter {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 14px;
+        padding: 16px;
+    }
+
+    .filter-group {
+        width: 100%;
+    }
+
+    #categoryFilter,
+    #keywordFilter {
+        width: 100%;
+        max-width: none;
+        min-width: 0;
+    }
+}
+
+/* Sembunyikan kartu yang tidak sesuai keyword */
+.link-card[hidden] {
+    display: none !important;
 }

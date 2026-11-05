@@ -143,17 +143,26 @@
 
 
             <div class="link-filter">
-                <label for="categoryFilter">Kategori</label>
 
-                <select id="categoryFilter">
-                    <option value="all">Semua Kategori</option>
-                    <option value="guide">Guide All Produk PMS Pro</option>
-                    <option value="other-products">Other Products</option>
-                    <option value="sop">Standar Operasional Prosedur (SOP)</option>
-                    <option value="tools">Tools & Resources</option>
-                    <option value="daily-monthly-do">Daily and Monthly Check</option>
-                    <option value="submit-report">Submit Report</option>
-                </select>
+                <div class="filter-group">
+                    <label for="categoryFilter">Kategori</label>
+
+                    <select id="categoryFilter">
+                        <option value="all">Semua Kategori</option>
+                        <option value="guide">Guide All Produk PMS Pro</option>
+                        <option value="other-products">Other Products</option>
+                        <option value="sop">Standar Operasional Prosedur (SOP)</option>
+                        <option value="tools">Tools & Resources</option>
+                        <option value="daily-monthly-do">Daily and Monthly Check</option>
+                        <option value="submit-report">Submit Report</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="keywordFilter">Cari Keyword</label>
+                    <input type="search" id="keywordFilter" placeholder="Cari nama atau deskripsi link..."
+                        autocomplete="off">
+                </div>
             </div>
 
             <!-- Kategori 1 -->
@@ -685,6 +694,7 @@
 
 </body>
 <script src="js/script.js" defer></script>
+<script src="js/linkshortcut.js" defer></script>
 <script src="https://unpkg.com/lucide@latest"></script>
 <script>
     lucide.createIcons();
